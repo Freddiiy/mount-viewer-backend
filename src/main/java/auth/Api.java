@@ -46,10 +46,7 @@ public class Api implements IApi {
         System.out.println(url);
         String response = HttpUtils.fetchData(url.toString());
 
-        System.out.println(response);
-
         return gson.fromJson(response, theClass);
-
     }
 
     public static void main(String[] args) {

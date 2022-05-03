@@ -3,18 +3,16 @@ package auth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
+import config.EnvConfig;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Scanner;
 
 public class OAuth implements IOAuth{
-    private final String clientId = "bee7aab86d8a4bfcb7f0b854505eade5";
-    private final String clientSecret = "IzLMAKZbTseihrY7tHTwJRNSqzYbOSMz";
     private String token = null;
     private Instant tokenExpiry = null;
     private final Object tokenLock = new Object();
@@ -25,18 +23,20 @@ public class OAuth implements IOAuth{
     public String getAccessToken() {
         if (isTokenInvalid()) {
 
-            String encodedCredentials = Base64.getEncoder().encodeToString(String.format("%s:%s", clientId, clientSecret).getBytes(StandardCharsets.UTF_8));
+            String encodedCredentials = Base64.getEncoder()
+                    .encodeToString(String.format("%s:%s", EnvConfig.getClientId(), EnvConfig.getClientSecret())
+                            .getBytes(ApiConfig.getEncoding()));
 
             HttpURLConnection con = null;
             String response = "";
 
             try {
-                URL url = new URL(ApiConfig.getTokenURl());
+                URL url = new URL(ApiConfig.getTokenURL());
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Authorization", String.format("Basic %s", encodedCredentials));
                 con.setDoOutput(true);
-                con.getOutputStream().write("grant_type=client_credentials".getBytes(StandardCharsets.UTF_8));
+                con.getOutputStream().write("grant_type=client_credentials".getBytes(ApiConfig.getEncoding()));
 
                 int responseCode = con.getResponseCode();
 
