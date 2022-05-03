@@ -1,56 +1,92 @@
 package auth;
 
-import com.google.gson.JsonObject;
-import com.nimbusds.jose.util.IOUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import config.ApiConfig;
 
-import javax.json.Json;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Scanner;
 
-public class OAuth {
+public class OAuth implements IOAuth{
     private final String clientId = "bee7aab86d8a4bfcb7f0b854505eade5";
     private final String clientSecret = "IzLMAKZbTseihrY7tHTwJRNSqzYbOSMz";
-    private String accessToken;
+    private String token = null;
+    private Instant tokenExpiry = null;
+    private final Object tokenLock = new Object();
 
-    public String generateAccessToken() {
-        String encodedCredentials = Base64.getEncoder().encodeToString(String.format("%s:%s", clientId, clientSecret).getBytes(StandardCharsets.UTF_8));
+    private final Gson gson = new GsonBuilder().create();
 
-        HttpURLConnection con = null;
-        String response = "";
+    @Override
+    public String getAccessToken() {
+        if (isTokenInvalid()) {
 
-        try {
-            URL url = new URL("https://us.battle.net/oauth/token");
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Authorization", String.format("Basic %s", encodedCredentials));
-            con.setDoOutput(true);
-            con.getOutputStream().write("grant_type=client_credentials".getBytes(StandardCharsets.UTF_8));
+            String encodedCredentials = Base64.getEncoder().encodeToString(String.format("%s:%s", clientId, clientSecret).getBytes(StandardCharsets.UTF_8));
 
-            int responseCode = con.getResponseCode();
+            HttpURLConnection con = null;
+            String response = "";
 
-            Scanner scan = new Scanner(con.getInputStream());
-            StringBuilder jsonStr = new StringBuilder();
-            while (scan.hasNext()) {
-                jsonStr.append(scan.nextLine());
+            try {
+                URL url = new URL(ApiConfig.getTokenURl());
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Authorization", String.format("Basic %s", encodedCredentials));
+                con.setDoOutput(true);
+                con.getOutputStream().write("grant_type=client_credentials".getBytes(StandardCharsets.UTF_8));
+
+                int responseCode = con.getResponseCode();
+
+                Scanner scan = new Scanner(con.getInputStream());
+                StringBuilder jsonStr = new StringBuilder();
+                while (scan.hasNext()) {
+                    jsonStr.append(scan.nextLine());
+                }
+                scan.close();
+
+                response = String.valueOf(jsonStr);
+
+                TokenResponse tokenResponse = gson.fromJson(response, TokenResponse.class);
+
+                synchronized (tokenLock) {
+                    tokenExpiry = Instant.now().plusSeconds(tokenResponse.getExpires_in());
+                    token = tokenResponse.getAccess_token();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (con != null) {
+                    con.disconnect();
+                }
             }
-            scan.close();
-
-            response = String.valueOf(jsonStr);
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return response;
+
+        synchronized (tokenLock) {
+            return token;
+        }
+    }
+
+    @Override
+    public boolean isTokenInvalid() {
+        synchronized (tokenLock) {
+            if (token == null) {
+                return true;
+            }
+            if (tokenExpiry == null) {
+                return true;
+            }
+            return Instant.now().isAfter(tokenExpiry);
+        }
+
     }
 
     public static void main(String[] args) {
         OAuth oAuth = new OAuth();
-        System.out.println(oAuth.generateAccessToken());
+        System.out.println(oAuth.getAccessToken());
+        System.out.println(oAuth.isTokenInvalid());
     }
 }
