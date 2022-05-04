@@ -19,6 +19,7 @@ import java.util.Map;
 
 public class Api implements IApi {
     private final Gson gson = new GsonBuilder().create();
+    private ApiConfig apiConfig;
 
     @Override
     public <T> T getDataFromApi(String region, String path, Map<String, String> param, Class<T> theClass) throws IOException, URISyntaxException {
@@ -31,7 +32,7 @@ public class Api implements IApi {
         String token = oAuth.getAccessToken();
 
         UriBuilder uriBuilder = UriBuilder
-                .fromUri(ApiConfig.getApiUrl(region).toURI())
+                .fromUri(new URL(apiConfig.getApiURL(region)).toURI())
                 .path(path);
 
         params.forEach(uriBuilder::queryParam);
