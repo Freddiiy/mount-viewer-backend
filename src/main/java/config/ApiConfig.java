@@ -7,95 +7,55 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class ApiConfig {
-    private static final String tokenURL = "https://eu.battle.net/oauth/token";
-    private static final String scheme = "https://";
-    private static String region;
-    private static final Charset encoding = StandardCharsets.UTF_8;
-    private static final String baseURL = "https://eu.api.blizzard.com";
-    private static final String apiURL = ".api.blizzard.com";
-    private static final String mediaURL = "/data/wow/media";
-
-    private String _tokenURL;
-    private String _scheme;
-    private String _region;
-    private Charset _encoding;
-    private String _baseURL;
-    private String _apiURL;
-    private String _mediaURL;
+    private URL tokenURL;
+    private String scheme;
+    private String region;
+    private Charset encoding;
+    private String baseURL;
+    private String apiURL;
+    private String mediaURL;
 
     public ApiConfig() {
     }
 
     @PostConstruct
-    public void init() {
-        this._tokenURL = tokenURL;
-        this._apiURL = apiURL;
-        this._baseURL = baseURL;
-        this._encoding = encoding;
-        this._scheme = scheme;
+    public void init() throws MalformedURLException {
+        this.tokenURL = new URL("https://eu.battle.net/oauth/token");
+        this.scheme = "https://";
+        this.apiURL = ".api.blizzard.com";
+        this.baseURL = "https://eu.api.blizzard.com";
+        this.encoding = StandardCharsets.UTF_8;
     }
 
-    public static URL getApiUrl(String region) throws MalformedURLException {
-        return new URL(scheme + region + apiURL);
-    }
-
-    public static String getApiUrlAsString(String region) throws MalformedURLException {
-        return getApiUrl(region).toString();
-    }
-
-    public static URL getMediaUrl(String region) throws MalformedURLException {
-        return new URL(scheme + region + apiURL);
-    }
-
-    public static String getMediaUrlAsString(String region) throws MalformedURLException {
-        return getApiUrl(region).toString();
-    }
-
-    public static String getTokenURL() {
+    public URL getTokenURL() {
         return tokenURL;
     }
 
-    public static Charset getEncoding() {
-        return encoding;
+    public String getTokenURLAsString() {
+        return tokenURL.toString();
     }
 
-    /***
-     * Getters for init'd variables (basically only for mocking)
-     */
+    public String getScheme() {
+        return scheme;
+    }
 
-    public static String getRegion() {
+    public String getRegion() {
         return region;
     }
 
-    public String get_tokenURL() {
-        return _tokenURL;
+    public Charset getEncoding() {
+        return encoding;
     }
 
-    public URL get_tolenURLAsURL() throws MalformedURLException {
-        return new URL(_tokenURL);
+    public String getBaseURL() {
+        return baseURL;
     }
 
-    public String get_scheme() {
-        return _scheme;
+    public String getApiURL(String region) {
+        return apiURL;
     }
 
-    public String get_region() {
-        return _region;
-    }
-
-    public Charset get_encoding() {
-        return _encoding;
-    }
-
-    public String get_baseURL() {
-        return _baseURL;
-    }
-
-    public String get_apiURL() {
-        return _apiURL;
-    }
-
-    public String get_mediaURL() {
-        return _mediaURL;
+    public String getMediaURL(String region) {
+        return mediaURL;
     }
 }

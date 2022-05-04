@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
 import config.EnvConfig;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -21,10 +21,10 @@ import java.io.OutputStream;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(MockitoJUnitRunner.class)
 public class OAuthTest {
 
     @Mock
@@ -40,7 +40,7 @@ public class OAuthTest {
     private OAuth oAuth;
 
     @Test
-    void getAccessToken() throws IOException {
+    public void getAccessToken() throws IOException, NoSuchFieldException {
         final String token = "fakeToken";
         final HttpURLConnection mockUrlConnection = Mockito.mock(HttpURLConnection.class);
         final OutputStream outputStream = Mockito.mock(OutputStream.class);
@@ -53,32 +53,44 @@ public class OAuthTest {
             }
         };
 
-        String clientId = "someFakeClientId";
-        String clientSecret = "someFakeClientSecret";
+        String clientId = "fakeClientId";
+        String clientSecret = "fakeClientSecret";
         Charset encodeFormat = StandardCharsets.UTF_8;
         int responseCode = 200;
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
-                String.format("{'access_token':'%s','token_type': 'bearer', 'expires_in':'1'}", token).getBytes(ApiConfig.getEncoding())
+                String.format("{'access_token':'%s', 'expires_in':'1'}", token).getBytes(encodeFormat)
         );
+
+        Mockito.doReturn(clientId).when(envConfig).getClientId();
+        Mockito.doReturn(clientSecret).when(envConfig).getClientSecret();
+        Mockito.doReturn(encodeFormat).when(apiConfig).getEncoding();
+        Mockito.doReturn(new URL("https://www.google.com/")).when(apiConfig).getTokenURL();
+       // Mockito.doReturn(mockTokenResponse).when(gson).fromJson(Mockito.anyString(), Mockito.eq(TokenResponse.class));
+
+        FieldSetter fieldSetter = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("urlStreamHandler"));
+        fieldSetter.set(urlStreamHandler);
 
         Mockito.doReturn(byteArrayInputStream).when(mockUrlConnection).getInputStream();
         Mockito.doReturn(outputStream).when(mockUrlConnection).getOutputStream();
-
-
-        Mockito.doReturn(clientId).when(envConfig).get_clientId();
-        Mockito.doReturn(clientSecret).when(envConfig).get_clientSecret();
-        Mockito.doReturn(encodeFormat).when(apiConfig).get_encoding();
-        Mockito.doReturn(new URL("https://www.google.com/")).when(apiConfig).get_tolenURLAsURL();
-        Mockito.doReturn(mockTokenResponse).when(gson).fromJson(Mockito.anyString(), Mockito.eq(TokenResponse.class));
-
-        Mockito.doReturn(token).when(mockTokenResponse).getAccess_token();
         Mockito.doReturn(responseCode).when(mockUrlConnection).getResponseCode();
 
-        Assert.assertEquals(token, oAuth.getAccessToken());
+        //ockito.doReturn(token).when(mockTokenResponse).getAccess_token();
+
+        Assertions.assertEquals(token, oAuth.getAccessToken());
+        Mockito.verify(mockUrlConnection, Mockito.times(1)).setRequestMethod("POST");
+        Mockito.verify(mockUrlConnection, Mockito.times(1))
+                .setRequestProperty("Authorization",
+                        String.format("Basic %s",
+                                Base64.getEncoder().encodeToString(
+                                        String.format("%s:%s", clientId, clientSecret).getBytes(encodeFormat))));
+
+        Mockito.verify(mockUrlConnection, Mockito.times(1)).setDoOutput(true);
+        Mockito.verify(outputStream, Mockito.times(1)).write("grant_type=client_credentials".getBytes(encodeFormat));
+        Mockito.verify(mockUrlConnection, Mockito.times(1)).getResponseCode();
     }
 
     @Test
-    void isTokenInvalid() {
+    public void isTokenInvalid() {
     }
 }

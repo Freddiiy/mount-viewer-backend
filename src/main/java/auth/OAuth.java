@@ -4,39 +4,47 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
 import config.EnvConfig;
+import org.codehaus.classworlds.uberjar.protocol.jar.Handler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLStreamHandler;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Scanner;
 
 public class OAuth implements IOAuth{
+    private ApiConfig apiConfig;
+
     private String token = null;
     private Instant tokenExpiry = null;
+    private EnvConfig envConfig;
     private final Object tokenLock = new Object();
 
     private final Gson gson = new GsonBuilder().create();
+
+    //Just for mock-testing the URL connection.
+    private URLStreamHandler urlStreamHandler = new Handler();
 
     @Override
     public String getAccessToken() {
         if (isTokenInvalid()) {
 
             String encodedCredentials = Base64.getEncoder()
-                    .encodeToString(String.format("%s:%s", EnvConfig.getClientId(), EnvConfig.getClientSecret())
-                            .getBytes(ApiConfig.getEncoding()));
+                    .encodeToString(String.format("%s:%s", envConfig.getClientId(), envConfig.getClientSecret())
+                            .getBytes(apiConfig.getEncoding()));
 
             HttpURLConnection con = null;
             String response = "";
 
             try {
-                URL url = new URL(ApiConfig.getTokenURL());
+                URL url = new URL(apiConfig.getTokenURL(), "", urlStreamHandler);
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Authorization", String.format("Basic %s", encodedCredentials));
                 con.setDoOutput(true);
-                con.getOutputStream().write("grant_type=client_credentials".getBytes(ApiConfig.getEncoding()));
+                con.getOutputStream().write("grant_type=client_credentials".getBytes(apiConfig.getEncoding()));
 
                 int responseCode = con.getResponseCode();
 
