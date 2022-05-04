@@ -4,19 +4,18 @@ import entities.Role;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.TypedQuery;
 
 import security.errorhandling.AuthenticationException;
 
 /**
  * @author lam@cphbusiness.dk
  */
-public class UserRepo {
+public class DemoRepo {
 
     private static EntityManagerFactory emf;
-    private static UserRepo instance;
+    private static DemoRepo instance;
 
-    private UserRepo() {
+    private DemoRepo() {
     }
 
     /**
@@ -24,10 +23,10 @@ public class UserRepo {
      * @param _emf
      * @return the instance of this repository.
      */
-    public static UserRepo getUserRepo(EntityManagerFactory _emf) {
+    public static DemoRepo getUserRepo(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
-            instance = new UserRepo();
+            instance = new DemoRepo();
         }
         return instance;
     }
