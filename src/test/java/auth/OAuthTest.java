@@ -65,7 +65,6 @@ public class OAuthTest {
         Mockito.doReturn(byteArrayInputStream).when(mockUrlConnection).getInputStream();
         Mockito.doReturn(outputStream).when(mockUrlConnection).getOutputStream();
 
-        FieldSetter.setField(oAuth, oAuth.getClass().getDeclaredField("urlStreamHandler"), urlStreamHandler);
 
         Mockito.doReturn(clientId).when(envConfig).get_clientId();
         Mockito.doReturn(clientSecret).when(envConfig).get_clientSecret();
