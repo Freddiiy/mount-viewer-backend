@@ -36,7 +36,7 @@ public class OAuth implements IOAuth{
                             .getBytes(apiConfig.getEncoding()));
 
             HttpURLConnection con = null;
-            String response = "";
+            String response;
 
             try {
                 URL url = new URL(apiConfig.getTokenURL(), "", urlStreamHandler);
@@ -94,7 +94,5 @@ public class OAuth implements IOAuth{
 
     public static void main(String[] args) {
         OAuth oAuth = new OAuth();
-        System.out.println(oAuth.getAccessToken());
-        System.out.println(oAuth.isTokenInvalid());
     }
 }
