@@ -115,7 +115,7 @@ public class OAuthTest {
         FieldSetter tokenReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("token"));
         tokenReflect.set("sampleToken");
 
-        Assertions.assertTrue(oAuth.isTokenInvalid());
+        Assertions.assertFalse(oAuth.isTokenInvalid());
     }
 
     @Test

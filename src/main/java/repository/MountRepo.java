@@ -99,6 +99,12 @@ public class MountRepo {
         EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = getMountRepo(entityManagerFactory);
 
+        Mount mount = mountRepo.getMountByMountId(6);
+        Mount mount1 = mountRepo.getMountByMountId(76);
+
+        System.out.println(mount.getName());
+        System.out.println(mount1.getName());
+
     }
 }
 

@@ -16,6 +16,15 @@ public class ApiConfig {
     private String mediaURL;
 
     public ApiConfig() {
+        try {
+            this.tokenURL = new URL("https://eu.battle.net/oauth/token");
+            this.scheme = "https://";
+            this.apiURL = ".api.blizzard.com";
+            this.baseURL = "https://eu.api.blizzard.com";
+            this.encoding = StandardCharsets.UTF_8;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostConstruct
@@ -28,6 +37,7 @@ public class ApiConfig {
     }
 
     public URL getTokenURL() {
+        System.out.println("duller " + tokenURL);
         return tokenURL;
     }
 
