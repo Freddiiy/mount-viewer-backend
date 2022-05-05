@@ -1,5 +1,7 @@
 package repository;
 
+import utils.Api;
+import utils.EMF_Creator;
 import utils.types.Character;
 import utils.types.Mount;
 import utils.types.MountElement;
@@ -8,10 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MountRepo {
 
@@ -36,35 +35,16 @@ public class MountRepo {
         return instance;
     }
 
-
-    public List<Mount> getAllMounts() //sprøg gallar når hans hovede ikke koger
-    {
+    public Mount getMountByMountId(int id){
+        Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
         Mount mount = null;
 
-        map.put("namespace", "static-");
+        map.put("namespace", "static-eu");
         map.put("locale", "en_US");
 
         try{
-            mount = api.getDataFromApi("eu", "/data/wow/mount/", map, Mount.class);
-        }
-        catch (URISyntaxException | IOException e){
-            e.printStackTrace();
-        }
-
-        return new ArrayList<>(mount);
-    }
-
-
-    public Mount getMountByMountId(int id, String region){
-        Map<String, String> map = new HashMap<>();
-        Mount mount = null;
-
-        map.put("namespace", "static-"+region);
-        map.put("locale", "en_US");
-
-        try{
-             mount = api.getDataFromApi(region, "/data/wow/mount/"+id, map, Mount.class);
+             mount = api.getDataFromApi("eu", "/data/wow/mount/"+id, map, Mount.class);
         }
         catch (URISyntaxException | IOException e){
             e.printStackTrace();
@@ -73,16 +53,17 @@ public class MountRepo {
         return mount;
     }
 
-    public Mount getMountByName(String name, String region){
+    public Mount getMountByName(String name){
+        Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
         Mount mount = null;
 
-        map.put("namespace", "static-"+region);
+        map.put("namespace", "static-eu");
         map.put("locale", "en_US");
         map.put("name.en_US", name);
 
         try{
-            mount = api.getDataFromApi(region, "/data/wow/search/mount", map, Mount.class);
+            mount = api.getDataFromApi("eu", "/data/wow/search/mount", map, Mount.class);
         }
         catch (URISyntaxException | IOException e){
             e.printStackTrace();
@@ -91,15 +72,16 @@ public class MountRepo {
         return mount;
     }
 
-    public Media getMountMediaByCreatureId(int id, String region){
+    public Media getMediaByCreatureId(int id){
+        Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
         Media media = null;
 
-        map.put("namespace", "static-"+region);
+        map.put("namespace", "static-eu");
         map.put("locale", "en_US");
 
         try{
-            media = api.getDataFromApi(region, "/data/wow/media/creature/"+id, map, Media.class);
+            media = api.getDataFromApi("eu", "/data/wow/media/creature/"+id, map, Media.class);
         }
         catch (URISyntaxException | IOException e){
             e.printStackTrace();
@@ -109,30 +91,14 @@ public class MountRepo {
     }
 
     public Media getMountMediaByItemId(int id, String region){
-        Map<String, String> map = new HashMap<>();
-        Media media = null;
-
-        map.put("namespace", "static-"+region);
-        map.put("locale", "en_US");
-
-        try{
-            media = api.getDataFromApi(region, "/data/wow/media/item/"+id, map, Media.class);
-        }
-        catch (URISyntaxException | IOException e){
-            e.printStackTrace();
-        }
-
-        return media;
+        return null;
     }
 
-    public List<MountElement> getAllMountsbyCharacter(String name, String server, String region){
-        Map<String, String> profileMap = new HashMap<>();
-        profileMap.put("namespace", "profile-"+region);
-        profileMap.put("locale", "en_US");
 
-        Character character = api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s/collections/mounts",server,name), profileMap, Character.class);
+    public static void main(String[] args) {
+        EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory();
+        MountRepo mountRepo = getMountRepo(entityManagerFactory);
 
-        return new ArrayList<>(character.getMounts());
     }
 }
 

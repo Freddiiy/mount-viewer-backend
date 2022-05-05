@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
 import config.EnvConfig;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,8 @@ import java.io.OutputStream;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
 
@@ -40,7 +43,7 @@ public class OAuthTest {
     private OAuth oAuth;
 
     @Test
-    public void getAccessToken() throws IOException, NoSuchFieldException {
+    public void testGetAccessToken() throws IOException, NoSuchFieldException {
         final String token = "fakeToken";
         final HttpURLConnection mockUrlConnection = Mockito.mock(HttpURLConnection.class);
         final OutputStream outputStream = Mockito.mock(OutputStream.class);
@@ -91,6 +94,31 @@ public class OAuthTest {
     }
 
     @Test
-    public void isTokenInvalid() {
+    public void testCachedToken() throws NoSuchFieldException {
+        final String token = "cachedToken";
+
+
+        FieldSetter tokenExpiryReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("tokenExpiry"));
+        tokenExpiryReflect.set(Instant.now().plus(5, ChronoUnit.MINUTES));
+
+        FieldSetter tokenReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("token"));
+        tokenReflect.set(token);
+
+        Assertions.assertEquals(token, oAuth.getAccessToken());
+    }
+
+    @Test
+    public void testInvalidTokenValidToken() throws NoSuchFieldException {
+        FieldSetter tokenExpiryReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("tokenExpiry"));
+        tokenExpiryReflect.set(Instant.now().plus(5, ChronoUnit.MINUTES));
+
+        FieldSetter tokenReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("token"));
+        tokenReflect.set("sampleToken");
+
+        Assertions.assertTrue(oAuth.isTokenInvalid());
+    }
+
+    @Test
+    public void testInvalidTokenIfNull() {
     }
 }

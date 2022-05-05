@@ -1,18 +1,16 @@
-package auth;
+package utils;
 
+import auth.OAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
-import utils.HttpUtils;
 import utils.types.Character;
 import utils.types.Mount;
 import utils.types.MountElement;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.*;
-import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +18,14 @@ import java.util.Map;
 public class Api implements IApi {
     private final Gson gson = new GsonBuilder().create();
     private ApiConfig apiConfig;
+    private static Api instance;
+
+    public static Api getInstance() {
+        if (instance == null) {
+            instance = new Api();
+        }
+        return instance;
+    }
 
     @Override
     public <T> T getDataFromApi(String region, String path, Map<String, String> param, Class<T> theClass) throws IOException, URISyntaxException {
