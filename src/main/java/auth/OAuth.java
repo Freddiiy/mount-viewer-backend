@@ -26,13 +26,13 @@ public class OAuth implements IOAuth{
     private final Gson gson = new GsonBuilder().create();
 
     //Just for mock-testing the URL connection.
-    private URLStreamHandler urlStreamHandler = new Handler();
+    private final URLStreamHandler urlStreamHandler = new Handler();
 
     public OAuth() {
     }
 
     @Override
-    public String getAccessToken() {
+    public String getAccessToken(boolean testing) {
         if (isTokenInvalid()) {
             String encodedCredentials = Base64.getEncoder()
                     .encodeToString(String.format("%s:%s", envConfig.getClientId(), envConfig.getClientSecret())
@@ -40,10 +40,14 @@ public class OAuth implements IOAuth{
 
             HttpURLConnection con = null;
             String response;
+            URL url;
 
             try {
-                System.out.println("Wow "+apiConfig.getTokenURL().toString());
-                URL url = new URL(apiConfig.getTokenURL(), "", urlStreamHandler);
+                if (testing) {
+                    url = new URL(apiConfig.getTokenURL(), "", urlStreamHandler);
+                } else {
+                    url = new URL(apiConfig.getTokenURL(), "");
+                }
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Authorization", String.format("Basic %s", encodedCredentials));
@@ -82,6 +86,10 @@ public class OAuth implements IOAuth{
         }
     }
 
+    public String getAccessToken() {
+        return getAccessToken(false);
+    }
+
     @Override
     public boolean isTokenInvalid() {
         synchronized (tokenLock) {
@@ -96,8 +104,9 @@ public class OAuth implements IOAuth{
 
     }
 
-    public static void main(String[] args) throws MalformedURLException {
+    public static void main(String[] args) {
         OAuth oAuth = new OAuth();
         oAuth.getAccessToken();
+        System.out.println(oAuth.getAccessToken());
     }
 }

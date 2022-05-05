@@ -80,7 +80,7 @@ public class OAuthTest {
 
         //ockito.doReturn(token).when(mockTokenResponse).getAccess_token();
 
-        Assertions.assertEquals(token, oAuth.getAccessToken());
+        Assertions.assertEquals(token, oAuth.getAccessToken(true));
         Mockito.verify(mockUrlConnection, Mockito.times(1)).setRequestMethod("POST");
         Mockito.verify(mockUrlConnection, Mockito.times(1))
                 .setRequestProperty("Authorization",

@@ -29,7 +29,7 @@ public class ApiConfig {
 
     @PostConstruct
     public void init() throws MalformedURLException {
-        this.tokenURL = new URL("https://eu.battle.net/oauth/token");
+        this.tokenURL = new URL("https://eu.api.battle.net/oauth/token");
         this.scheme = "https://";
         this.apiURL = ".api.blizzard.com";
         this.baseURL = "https://eu.api.blizzard.com";
@@ -37,7 +37,6 @@ public class ApiConfig {
     }
 
     public URL getTokenURL() {
-        System.out.println("duller " + tokenURL);
         return tokenURL;
     }
 
