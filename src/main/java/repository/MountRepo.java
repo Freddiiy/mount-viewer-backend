@@ -4,13 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dtos.AssetsDTO;
+import dtos.MountDTO;
+import dtos.ResponseBodyDTO;
 import utils.Api;
-import utils.BattlenetParams;
 import utils.EMF_Creator;
 import utils.types.Mount;
 
 import javax.persistence.EntityManagerFactory;
-import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -48,10 +49,10 @@ public class MountRepo implements IMountRepo {
      */
 
     @Override
-    public Set<Mount> getAllMounts() {
+    public Set<MountDTO> getAllMounts() {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Set<Mount> mountSet = new HashSet<>();
+        Set<MountDTO> mountSet = new HashSet<>();
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
@@ -61,7 +62,7 @@ public class MountRepo implements IMountRepo {
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
                 Mount mount = gson.fromJson(mounts, Mount.class);
-                mountSet.add(mount);
+                mountSet.add(new MountDTO(mount));
             }
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -71,36 +72,37 @@ public class MountRepo implements IMountRepo {
     }
 
     @Override
-    public Mount getMountByMountId(int id){
+    public MountDTO getMountByMountId(int id){
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Mount mount = null;
+        MountDTO mount = null;
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
-
         try{
-             mount = api.getDataFromApi("eu", "/data/wow/mount/"+id, map, Mount.class);
+             mount = api.getDataFromApi("eu", "/data/wow/mount/"+id, map, MountDTO.class);
         }
+
         catch (URISyntaxException | IOException e){
             e.printStackTrace();
         }
 
+        assert mount != null;
         return mount;
     }
 
     @Override
-    public Mount getMountByName(String name){
+    public MountDTO getMountByName(String name){
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Mount mount = null;
+        MountDTO mount = null;
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
         map.put("name.en_US", name);
 
         try{
-            mount = api.getDataFromApi("eu", "/data/wow/search/mount", map, Mount.class);
+            mount = api.getDataFromApi("eu", "/data/wow/search/mount", map, MountDTO.class);
         }
         catch (URISyntaxException | IOException e){
             e.printStackTrace();
@@ -111,27 +113,27 @@ public class MountRepo implements IMountRepo {
 
     //TODO: Make when database is made :)
     @Override
-    public Mount getMountByItemId(int itemId) {
+    public MountDTO getMountByItemId(int itemId) {
         return null;
     }
 
     @Override
-    public Media getCreatureMediaByMountId(int id) {
+    public AssetsDTO getCreatureMediaByMountId(int id) {
         return null;
     }
 
     @Override
-    public Media getCreatureMediaByCreatureId(int id) {
+    public AssetsDTO getCreatureMediaByCreatureId(int id) {
         return null;
     }
 
     @Override
-    public Media getItemMediaByItemId(int id) {
+    public AssetsDTO getItemMediaByItemId(int id) {
         return null;
     }
 
     @Override
-    public Media getItemMediaByMountId(int id) {
+    public AssetsDTO getItemMediaByMountId(int id) {
         return null;
     }
 
@@ -140,7 +142,9 @@ public class MountRepo implements IMountRepo {
         EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(entityManagerFactory);
 
-        mountRepo.getAllMounts().forEach(mount -> System.out.println("name: " + mount.getName() + " id: " + mount.getID()));
+        MountDTO mountDTO = mountRepo.getMountByMountId(6);
+
+        System.out.println(mountDTO.getName());
 
     }
 }

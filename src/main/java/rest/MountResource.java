@@ -4,6 +4,7 @@ import auth.OAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.MountDTO;
+import dtos.ResponseBodyDTO;
 import entities.User;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -82,7 +83,7 @@ public class MountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getById/{id}")
     public Response getMountById(@PathParam("id") int id) throws EntityNotFoundException {
-        MountDTO m = new MountDTO(mountRepo.getMountByMountId(id));
+        MountDTO m = mountRepo.getMountByMountId(id);
         return Response.ok().entity(GSON.toJson(m)).build();
     }
 
@@ -90,17 +91,20 @@ public class MountResource {
    @Produces(MediaType.APPLICATION_JSON)
    @Path("getByName/{name}")
    public Response getMountByName(@PathParam("name") String name) throws EntityNotFoundException{
-        MountDTO m = new MountDTO(mountRepo.getMountByName(name));
+        MountDTO m = mountRepo.getMountByName(name);
         return Response.ok().entity(GSON.toJson(m)).build();
     }
 
+    /*
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getMediaByCreatureId/{id}")
     public Response getMediaByCreatureId(@PathParam("id") int id) throws EntityNotFoundException{
-        Assets href = mountRepo.getMediaByCreatureId(id);
+        Assets href = mountRepo.getCreatureMediaByCreatureId(2);
         return Response.ok().entity(GSON.toJson(href)).build();
     }
+
+     */
 
 
 }
