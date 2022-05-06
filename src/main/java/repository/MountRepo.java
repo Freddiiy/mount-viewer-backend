@@ -109,7 +109,6 @@ public class MountRepo implements IMountRepo {
         return mount;
     }
 
-
     //TODO: Make when database is made :)
     @Override
     public Mount getMountByItemId(int itemId) {
