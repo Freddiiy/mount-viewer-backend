@@ -2,6 +2,7 @@ package repository;
 
 import utils.Api;
 import utils.EMF_Creator;
+import utils.types.Assets;
 import utils.types.Character;
 import utils.types.Mount;
 import utils.types.MountElement;
@@ -72,16 +73,18 @@ public class MountRepo {
         return mount;
     }
 
-    public Media getMediaByCreatureId(int id){
+    //Changed return Datatype from Media to String since we only need the href from media.
+    //Also, where the fuck is the Media class????
+    public String getMediaByCreatureId(int id){
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Media media = null;
+        String media = null;
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
 
         try{
-            media = api.getDataFromApi("eu", "/data/wow/media/creature/"+id, map, Media.class);
+            media = api.getDataFromApi("us", "/data/wow/media/creature/"+id, map, String.class);
         }
         catch (URISyntaxException | IOException e){
             e.printStackTrace();
@@ -90,8 +93,23 @@ public class MountRepo {
         return media;
     }
 
-    public Media getMountMediaByItemId(int id, String region){
-        return null;
+    //Same with this one.
+    public Assets getMountMediaByItemId(int id){
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        Assets media = null;
+
+        map.put("namespace", "static-eu");
+        map.put("locale", "en_US");
+
+        try{
+            media = api.getDataFromApi("us", "/data/wow/media/item/"+id, map, Assets.class);
+        }
+        catch (URISyntaxException | IOException e){
+            e.printStackTrace();
+        }
+
+        return media;
     }
 
 

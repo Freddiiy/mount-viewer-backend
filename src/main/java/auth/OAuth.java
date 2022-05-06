@@ -29,7 +29,11 @@ public class OAuth implements IOAuth{
 
     @Override
     public String getAccessToken() {
+        System.out.println("Er token valid?");
         if (isTokenInvalid()) {
+            System.out.println(envConfig.getClientId());
+            System.out.println(envConfig.getClientSecret());
+            System.out.println("Hej fra true");
 
             String encodedCredentials = Base64.getEncoder()
                     .encodeToString(String.format("%s:%s", envConfig.getClientId(), envConfig.getClientSecret())
@@ -94,5 +98,6 @@ public class OAuth implements IOAuth{
 
     public static void main(String[] args) {
         OAuth oAuth = new OAuth();
+        System.out.println(oAuth.getAccessToken());
     }
 }
