@@ -1,6 +1,9 @@
 package config;
 
+import org.junit.Assert;
+
 import javax.annotation.PostConstruct;
+
 
 public class EnvConfig {
     private static final String clientIdEnv = "bee7aab86d8a4bfcb7f0b854505eade5";
@@ -8,10 +11,15 @@ public class EnvConfig {
     private String clientId;
     private String clientSecret;
 
+    public EnvConfig() {
+        this.clientId = clientIdEnv;
+        this.clientSecret = clientSecretEnv;
+    }
+
     @PostConstruct
     public void init() {
-        clientId = clientIdEnv;
-        clientSecret = clientSecretEnv;
+        this.clientId = clientIdEnv;
+        this.clientSecret = clientSecretEnv;
     }
     public static String getClientIdEnv() {
         return clientIdEnv;

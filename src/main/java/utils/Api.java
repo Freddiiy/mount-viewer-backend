@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class Api implements IApi {
     private final Gson gson = new GsonBuilder().create();
-    private ApiConfig apiConfig;
+    private final ApiConfig apiConfig = new ApiConfig();
     private static Api instance;
 
     public static Api getInstance() {

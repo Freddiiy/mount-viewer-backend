@@ -2,7 +2,6 @@ package repository;
 
 import utils.Api;
 import utils.EMF_Creator;
-import utils.types.Character;
 import utils.types.Mount;
 import utils.types.MountElement;
 
@@ -15,7 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class CharacterRepo {
+public class CharacterRepo implements ICharacterRepo {
     private static EntityManagerFactory emf;
     private static CharacterRepo instance;
 
@@ -37,37 +36,27 @@ public class CharacterRepo {
         return instance;
     }
 
-    public Set<MountElement> getAllMountsOfCharacter(String region, String realmSlug, String characterName) {
-        Map<String, String> map = new HashMap<>();
+    @Override
+    public Character getCharacterInfo(String region, String serverSlug, String name) {
+        return null;
+    }
 
-        map.put("namespace", "profile-"+region);
-        map.put("locale", "en_US");
+    @Override
+    public Set<Mount> getCharacterMounts(String region, String serverSlug, String name) {
+        return null;
+    }
 
-        try{
-            Api api = Api.getInstance();
-            Character character =
-                    api.getDataFromApi("eu",
-                            String.format("/profile/wow/character/%s/%s/collections/mounts", realmSlug, characterName),
-                            map,
-                            Character.class
-                    );
+    @Override
+    public Set<Mount> getCharacterMountsByCharacterId(int id) {
+        return null;
+    }
 
-            return new HashSet<>(character.getMounts());
-        }
-        catch (URISyntaxException | IOException e){
-            e.printStackTrace();
-        }
-
+    @Override
+    public Media getMediaByCharacterId(int id) {
         return null;
     }
 
     public static void main(String[] args) {
-        CharacterRepo characterRepo = getCharacterRepo(EMF_Creator.createEntityManagerFactory());
-
-        Set<MountElement> mountElementSet = characterRepo.getAllMountsOfCharacter("eu", "tarren-mill", "chasie");
-
-        for (MountElement mountElement : mountElementSet) {
-            System.out.println(mountElement.getMount().getName());
-        }
     }
+
 }
