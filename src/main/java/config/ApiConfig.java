@@ -61,7 +61,7 @@ public class ApiConfig {
     }
 
     public String getApiURL(String region) {
-        return apiURL;
+        return scheme + region + apiURL;
     }
 
     public String getMediaURL(String region) {

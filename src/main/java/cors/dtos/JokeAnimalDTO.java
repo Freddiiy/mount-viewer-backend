@@ -1,4 +1,4 @@
-package dtos;
+package cors.dtos;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
