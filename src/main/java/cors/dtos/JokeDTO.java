@@ -1,4 +1,4 @@
-package dtos;
+package cors.dtos;
 
 public class JokeDTO {
 

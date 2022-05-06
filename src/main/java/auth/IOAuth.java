@@ -1,6 +1,6 @@
 package auth;
 
 public interface IOAuth {
-    String getAccessToken();
+    String getAccessToken(boolean testing);
     boolean isTokenInvalid();
 }
