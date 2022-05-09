@@ -22,12 +22,7 @@ public class OAuth implements IOAuth{
     private final Gson gson = new GsonBuilder().create();
 
     //Just for mock-testing the URL connection.
-    private final URLStreamHandler urlStreamHandler = new URLStreamHandler() {
-        @Override
-        protected URLConnection openConnection(URL u) throws IOException {
-            return null;
-        }
-    };
+    private final URLStreamHandler urlStreamHandler = null;
 
 
     @Override

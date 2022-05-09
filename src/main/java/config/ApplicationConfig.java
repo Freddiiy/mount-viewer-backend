@@ -1,8 +1,6 @@
 package config;
 
 import jakarta.ws.rs.ApplicationPath;
-import rest.CharacterResource;
-import rest.MountResource;
 
 import java.util.Set;
 import jakarta.ws.rs.core.Application;
@@ -25,7 +23,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
 
-        resources.add(CorsFilter.class);
+        resources.add(config.CorsFilter.class);
         resources.add(errorhandling.API_ExceptionMapper.class);
         resources.add(errorhandling.GenericExceptionMapper.class);
         resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
