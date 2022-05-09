@@ -5,17 +5,18 @@ import com.google.gson.GsonBuilder;
 import dtos.CharacterDTO;
 import dtos.MountDTO;
 import dtos.MountElementDTO;
+import errorhandling.API_Exception;
 import repository.CharacterRepo;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 @Path("character")
@@ -35,7 +36,24 @@ public class CharacterResource
     }
 
     @GET
-    @Path("getAllMounts/{region}/{slug}/{charName}")
+    @Path("{region}/{slug}/{charName}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getCharacter(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName) throws API_Exception {
+        CharacterDTO characterDTO;
+        try {
+            characterDTO = characterRepo.getCharacterInfo(region, slug, charName);
+        } catch (IOException | URISyntaxException e) {
+            throw new API_Exception("No Character found", 404, e);
+        }
+
+        return Response
+                .ok()
+                .entity(GSON.toJson(characterDTO))
+                .build();
+    }
+
+    @GET
+    @Path("mounts/{region}/{slug}/{charName}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getByTitle(@PathParam("region") String region,@PathParam("slug") String Slug,@PathParam("charName") String charName) throws EntityNotFoundException{
         //Not finished, needed some return type refactoring?
