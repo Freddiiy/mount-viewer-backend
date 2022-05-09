@@ -2,8 +2,8 @@ package repository;
 
 import entities.Role;
 import entities.User;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import security.errorhandling.AuthenticationException;
 
@@ -20,7 +20,6 @@ public class DemoRepo {
 
     /**
      *
-     * @param _emf
      * @return the instance of this repository.
      */
     public static DemoRepo getUserRepo(EntityManagerFactory _emf) {

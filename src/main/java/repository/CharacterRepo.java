@@ -1,17 +1,15 @@
 package repository;
 
+import dtos.AssetsDTO;
 import dtos.CharacterDTO;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Mount;
-import utils.types.MountElement;
 
-import javax.persistence.EntityManagerFactory;
-import javax.print.attribute.standard.Media;
+import jakarta.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,7 +57,7 @@ public class CharacterRepo implements ICharacterRepo {
     }
 
     @Override
-    public Media getMediaByCharacterId(int id) {
+    public AssetsDTO getMediaByCharacterId(int id) {
         return null;
     }
 

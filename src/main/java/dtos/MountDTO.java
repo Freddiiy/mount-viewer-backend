@@ -1,11 +1,7 @@
 package dtos;
 
-
-import utils.types.CreatureDisplay;
 import utils.types.Mount;
 
-import javax.ws.rs.core.Link;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MountDTO {

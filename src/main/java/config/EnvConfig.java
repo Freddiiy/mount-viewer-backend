@@ -1,6 +1,6 @@
 package config;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 
 public class EnvConfig {

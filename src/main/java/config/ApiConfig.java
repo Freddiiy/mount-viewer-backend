@@ -1,6 +1,6 @@
 package config;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;

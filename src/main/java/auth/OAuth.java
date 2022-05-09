@@ -7,17 +7,16 @@ import config.EnvConfig;
 
 import java.io.IOException;
 import java.net.*;
-import java.net.spi.URLStreamHandlerProvider;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Scanner;
 
 public class OAuth implements IOAuth{
-    private ApiConfig apiConfig = new ApiConfig();
+    private final ApiConfig apiConfig = new ApiConfig();
 
     private String token = null;
     private Instant tokenExpiry = null;
-    private EnvConfig envConfig = new EnvConfig();
+    private final EnvConfig envConfig = new EnvConfig();
     private final Object tokenLock = new Object();
 
     private final Gson gson = new GsonBuilder().create();
