@@ -1,7 +1,5 @@
 package config;
 
-import org.junit.Assert;
-
 import javax.annotation.PostConstruct;
 
 

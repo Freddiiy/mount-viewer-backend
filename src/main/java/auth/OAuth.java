@@ -4,13 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
 import config.EnvConfig;
-import org.codehaus.classworlds.uberjar.protocol.jar.Handler;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLStreamHandler;
+import java.net.*;
+import java.net.spi.URLStreamHandlerProvider;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Scanner;
@@ -26,10 +23,13 @@ public class OAuth implements IOAuth{
     private final Gson gson = new GsonBuilder().create();
 
     //Just for mock-testing the URL connection.
-    private final URLStreamHandler urlStreamHandler = new Handler();
+    private final URLStreamHandler urlStreamHandler = new URLStreamHandler() {
+        @Override
+        protected URLConnection openConnection(URL u) throws IOException {
+            return null;
+        }
+    };
 
-    public OAuth() {
-    }
 
     @Override
     public String getAccessToken(boolean testing) {
