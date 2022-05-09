@@ -1,5 +1,6 @@
 package repository;
 
+import dtos.CharacterDTO;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Mount;
@@ -37,8 +38,14 @@ public class CharacterRepo implements ICharacterRepo {
     }
 
     @Override
-    public Character getCharacterInfo(String region, String serverSlug, String name) {
-        return null;
+    public CharacterDTO getCharacterInfo(String region, String realmSlug, String characterName) throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+
+        map.put("namespace", "profile-"+region);
+        map.put("locale", "en_US");
+
+        return api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
     }
 
     @Override
@@ -56,7 +63,11 @@ public class CharacterRepo implements ICharacterRepo {
         return null;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        CharacterRepo characterRepo = CharacterRepo.getCharacterRepo(EMF_Creator.createEntityManagerFactory());
+
+        CharacterDTO characterDTO = characterRepo.getCharacterInfo("eu", "tarren-mill", "chasie");
+        System.out.println(characterDTO.getId() + " " + characterDTO.getLevel() + " " + characterDTO.getName());
     }
 
 }

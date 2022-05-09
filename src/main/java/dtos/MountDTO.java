@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MountDTO {
-    private LinksDTO links;
     private long id;
     private String name;
     private List<CreatureDisplayDTO> creatureDisplays;
@@ -26,8 +25,6 @@ public class MountDTO {
         if(m.getID() != 0)
             this.id = m.getID();
 
-        this.links = new LinksDTO(m.getLinks());
-
         this.name = m.getName();
 
         this.creatureDisplays = CreatureDisplayDTO.getDtos(m.getCreatureDisplays());
@@ -40,9 +37,11 @@ public class MountDTO {
 
         this.requirements = new RequirementsDTO(m.getRequirements());
     }
-
+    /*
     public LinksDTO getLinks() { return links; }
     public void setLinks(LinksDTO value) { this.links = value; }
+
+     */
 
     public long getID() { return id; }
     public void setID(long value) { this.id = value; }

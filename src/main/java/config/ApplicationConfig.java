@@ -1,4 +1,8 @@
-package rest;
+package config;
+
+import repository.CharacterRepo;
+import rest.CharacterResource;
+import rest.MountResource;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
@@ -31,6 +35,8 @@ public class ApplicationConfig extends Application {
         resources.add(security.RolesAllowedFilter.class);
         resources.add(security.errorhandling.AuthenticationExceptionMapper.class);
         resources.add(security.errorhandling.NotAuthorizedExceptionMapper.class);
+        resources.add(CharacterResource.class);
+        resources.add(MountResource.class);
     }
     
 }
