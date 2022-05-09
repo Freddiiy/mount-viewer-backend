@@ -18,6 +18,8 @@ jobs:
     #       DB_USER: dev
     #       DB_PASSWORD: ax2
     steps:
+      - name: env echo
+        run: echo "${{secrets.REMOTE_USER}} and ${{secrets.REMOTE_PW}}"
       - name: checkout
         uses: actions/checkout@v2
       - name: setup jdk 11
