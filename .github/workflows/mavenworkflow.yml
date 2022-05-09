@@ -1,8 +1,10 @@
 name: Github actions with maven build and deploy
-on:
+on:  
   push:
+  pull_request:
     branches:
       - main
+
 
 jobs:
   Do-the-travis-thing:
