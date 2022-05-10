@@ -35,7 +35,7 @@ public class CharacterResource
 
 
     @GET
-    @Path("{region}/{slug}/{charName}")
+    @Path("{region}/{slug}/{charName}")     //get character information
     @Produces({MediaType.APPLICATION_JSON})
     public Response getCharacter(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName) throws API_Exception {
         CharacterDTO characterDTO;
@@ -52,12 +52,20 @@ public class CharacterResource
     }
 
     @GET
-    @Path("mounts/{region}/{slug}/{charName}")
+    @Path("mounts/{region}/{slug}/{charName}")      //get all character mounts
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getByTitle(@PathParam("region") String region,@PathParam("slug") String Slug,@PathParam("charName") String charName) throws EntityNotFoundException{
+    public Response getCharacterMounts(@PathParam("region") String region,@PathParam("slug") String Slug,@PathParam("charName") String charName) throws EntityNotFoundException{
         //Not finished, needed some return type refactoring?
 //        Set<MountElementDTO> m = characterRepo.getAllMountsOfCharacter(region, Slug, charName);
 //        return Response.ok().entity(GSON.toJson(m)).build();
+
+        return null;
+    }
+
+    @GET
+    @Path("{region}/{slug}/{charName}/character-media")     //get character media
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getCharacterMedia(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName){
 
         return null;
     }
