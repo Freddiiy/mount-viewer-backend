@@ -1,13 +1,13 @@
 package rest;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
-import jakarta.persistence.EntityManager;
-import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.UriBuilder;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -18,10 +18,12 @@ import org.junit.jupiter.api.Test;
 import repository.MountRepo;
 import utils.EMF_Creator;
 
+import javax.persistence.EntityManager;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+//import static io.restassured.RestAssured.*;
 
 public class MountTest {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -52,15 +54,12 @@ public class MountTest {
 
     @AfterAll
     public static void closeTestServer() {
-        //System.in.read();
-
-        //Don't forget this, if you called its counterpart in @BeforeAll
         EMF_Creator.endREST_TestWithDB();
         httpServer.shutdownNow();
     }
 
     @Test
-    void demoTest() {
+    void testEndpoint() {
         given()
                 .contentType(ContentType.JSON)
                 .get("/character/test")

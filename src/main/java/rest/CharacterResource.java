@@ -6,14 +6,14 @@ import dtos.CharacterDTO;
 import dtos.MountDTO;
 import dtos.MountElementDTO;
 import errorhandling.API_Exception;
-import jakarta.ws.rs.*;
+import javax.ws.rs.*;
 import repository.CharacterRepo;
 import utils.EMF_Creator;
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -33,6 +33,7 @@ public class CharacterResource
         return "{\"msg\":\"Hello World\"}";
     }
 
+   /*
     @GET
     @Path("{region}/{slug}/{charName}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -62,4 +63,6 @@ public class CharacterResource
     }
 
 
+
+    */
 }

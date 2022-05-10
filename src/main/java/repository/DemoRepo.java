@@ -2,8 +2,8 @@ package repository;
 
 import entities.Role;
 import entities.User;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import security.errorhandling.AuthenticationException;
 

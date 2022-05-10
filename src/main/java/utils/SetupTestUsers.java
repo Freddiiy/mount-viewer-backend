@@ -4,8 +4,8 @@ package utils;
 import entities.Role;
 import entities.User;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 public class SetupTestUsers {
 

@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 import config.ApiConfig;
 import dtos.ResponseBodyDTO;
 
-import jakarta.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.*;
 import java.net.http.HttpRequest;

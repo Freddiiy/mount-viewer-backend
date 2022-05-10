@@ -1,29 +1,29 @@
 package rest;
 
-import auth.OAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.MountDTO;
-import dtos.ResponseBodyDTO;
 import entities.User;
 import java.util.List;
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.TypedQuery;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.*;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
+import javax.annotation.security.RolesAllowed;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.*;
+import javax.ws.rs.Produces;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import repository.MountRepo;
 import utils.EMF_Creator;
-import utils.types.Assets;
+
 
 /**
  * @author lam@cphbusiness.dk
  */
+
+
 @Path("mount")
 public class MountResource {
 
@@ -104,6 +104,4 @@ public class MountResource {
     }
 
      */
-
-
 }

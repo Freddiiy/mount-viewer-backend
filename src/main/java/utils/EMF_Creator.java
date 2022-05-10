@@ -3,8 +3,8 @@ package utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class EMF_Creator {
 
@@ -48,10 +48,10 @@ public class EMF_Creator {
             String dbName = getDbName(); //Gets the database name from pom.xml
             String connection_str = System.getenv("CONNECTION_STR") + dbName; //Creates the full JDBC connection string
             Properties props = new Properties();
-            props.setProperty("jakarta.persistence.jdbc.user", user);
-            props.setProperty("jakarta.persistence.jdbc.password", pw);
-            props.setProperty("jakarta.persistence.jdbc.url", connection_str);
-            props.setProperty("jakarta.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
+            props.setProperty("javax.persistence.jdbc.user", user);
+            props.setProperty("javax.persistence.jdbc.password", pw);
+            props.setProperty("javax.persistence.jdbc.url", connection_str);
+            props.setProperty("javax.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
             
             //Sets the production log-level to show only potential problems
             props.setProperty("eclipselink.logging.level","WARNING");
@@ -72,7 +72,7 @@ public class EMF_Creator {
         try {
          emf =  Persistence.createEntityManagerFactory(puName, null);
        
-        } catch (jakarta.persistence.PersistenceException ex){
+        } catch (javax.persistence.PersistenceException ex){
             System.out.println("##########################################################");
             System.out.println("######      ERROR Creating a persistence Unit       ######");
             System.out.println("###### Have you started the dev and test databases? ######");
