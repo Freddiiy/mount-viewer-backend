@@ -6,7 +6,7 @@ import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Mount;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;

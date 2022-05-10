@@ -119,6 +119,7 @@ public class OAuthTest {
         Assertions.assertFalse(oAuth.isTokenInvalid());
     }
 
+    @Disabled
     @Test
     public void testInvalidTokenIfNull() {
     }

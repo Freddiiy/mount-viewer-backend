@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 import repository.MountRepo;
 import utils.EMF_Creator;
 
-import javax.persistence.EntityManager;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.persistence.EntityManager;
+import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 import static io.restassured.RestAssured.given;
@@ -56,6 +56,15 @@ public class MountTest {
     public static void closeTestServer() {
         EMF_Creator.endREST_TestWithDB();
         httpServer.shutdownNow();
+    }
+
+    @Test
+    void testForRootPath() {
+        given()
+                .get("")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
     }
 
     @Test
