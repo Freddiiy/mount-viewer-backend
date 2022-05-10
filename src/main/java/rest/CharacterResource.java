@@ -33,7 +33,7 @@ public class CharacterResource
         return "{\"msg\":\"Hello World\"}";
     }
 
-   /*
+
     @GET
     @Path("{region}/{slug}/{charName}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -61,8 +61,4 @@ public class CharacterResource
 
         return null;
     }
-
-
-
-    */
 }
