@@ -5,6 +5,9 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 
+import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,13 +22,13 @@ import repository.MountRepo;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+//import static io.restassured.RestAssured.*;
 
-public class MountTest {
+public class CharacterTest {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private EntityManager em;
     private MountRepo mountRepo;
@@ -46,6 +49,8 @@ public class MountTest {
         EMF_Creator.startREST_TestWithDB();
 
         httpServer = startServer();
+
+        System.out.println(BASE_URI);
 
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
