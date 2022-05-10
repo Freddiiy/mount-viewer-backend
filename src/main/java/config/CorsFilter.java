@@ -1,4 +1,4 @@
-package cors;
+package config;
 
 import java.io.IOException;
 import javax.ws.rs.container.ContainerRequestContext;

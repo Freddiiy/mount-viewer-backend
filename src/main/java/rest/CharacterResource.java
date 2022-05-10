@@ -6,18 +6,16 @@ import dtos.CharacterDTO;
 import dtos.MountDTO;
 import dtos.MountElementDTO;
 import errorhandling.API_Exception;
+import javax.ws.rs.*;
 import repository.CharacterRepo;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Set;
 
 @Path("character")
 public class CharacterResource
@@ -34,6 +32,7 @@ public class CharacterResource
     public String demo() {
         return "{\"msg\":\"Hello World\"}";
     }
+
 
     @GET
     @Path("{region}/{slug}/{charName}")     //get character information
@@ -63,7 +62,6 @@ public class CharacterResource
         return null;
     }
 
-
     @GET
     @Path("{region}/{slug}/{charName}/character-media")     //get character media
     @Produces({MediaType.APPLICATION_JSON})
@@ -71,6 +69,4 @@ public class CharacterResource
 
         return null;
     }
-
-
 }

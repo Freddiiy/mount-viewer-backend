@@ -1,13 +1,11 @@
 package config;
 
-import repository.CharacterRepo;
-import rest.CharacterResource;
-import rest.MountResource;
+import javax.ws.rs.ApplicationPath;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
 
-@javax.ws.rs.ApplicationPath("api")
+@ApplicationPath("api")
 public class ApplicationConfig extends Application {
 
     @Override
@@ -25,11 +23,10 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
 
-        resources.add(cors.CorsFilter.class);
+        resources.add(config.CorsFilter.class);
         resources.add(errorhandling.API_ExceptionMapper.class);
         resources.add(errorhandling.GenericExceptionMapper.class);
         resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
-        resources.add(rest.DemoResource.class);
         resources.add(security.JWTAuthenticationFilter.class);
         resources.add(security.LoginEndpoint.class);
         resources.add(security.RolesAllowedFilter.class);

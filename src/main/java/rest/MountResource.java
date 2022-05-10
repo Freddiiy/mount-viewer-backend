@@ -1,10 +1,8 @@
 package rest;
 
-import auth.OAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.MountDTO;
-import dtos.ResponseBodyDTO;
 import entities.User;
 
 import java.io.IOException;
@@ -22,15 +20,16 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-
 import errorhandling.API_Exception;
 import repository.MountRepo;
 import utils.EMF_Creator;
-import utils.types.Assets;
+
 
 /**
  * @author lam@cphbusiness.dk
  */
+
+
 @Path("mount")
 public class MountResource {
 
@@ -40,40 +39,7 @@ public class MountResource {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    @GET
-    @Path("test")
-    @Produces({MediaType.APPLICATION_JSON})
-    public String demo() {
-        return "{\"msg\":\"Hello World\"}";
-    }
 
-    @GET                                    //get all mounts in the game
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMounts() throws API_Exception {
-        Set<MountDTO> mountDTOSet = new HashSet<>();
-       try{
-           mountDTOSet = mountRepo.getAllMounts();
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-
-       return Response
-               .ok()
-               .entity(GSON.toJson(mountDTOSet))
-               .build();
-
-    }
-
-
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})     //get mount item media
-    @Path("media/{itemId}")
-    public Response getMountMedia(@PathParam("itemId") int itemId){
-        return null;
-    }
-
-
-    //Not touching Gallars code just in case - O
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)       //get mount by id
@@ -101,6 +67,4 @@ public class MountResource {
     }
 
      */
-
-
 }

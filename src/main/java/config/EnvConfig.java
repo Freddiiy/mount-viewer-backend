@@ -1,8 +1,5 @@
 package config;
 
-import javax.annotation.PostConstruct;
-
-
 public class EnvConfig {
     private static final String clientIdEnv = "bee7aab86d8a4bfcb7f0b854505eade5";
     private static final String clientSecretEnv = "IzLMAKZbTseihrY7tHTwJRNSqzYbOSMz";
@@ -14,11 +11,6 @@ public class EnvConfig {
         this.clientSecret = clientSecretEnv;
     }
 
-    @PostConstruct
-    public void init() {
-        this.clientId = clientIdEnv;
-        this.clientSecret = clientSecretEnv;
-    }
     public static String getClientIdEnv() {
         return clientIdEnv;
     }

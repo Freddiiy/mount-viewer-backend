@@ -1,11 +1,12 @@
 package auth;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
 import config.EnvConfig;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -26,7 +27,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
-
 @ExtendWith(MockitoExtension.class)
 public class OAuthTest {
 
@@ -42,6 +42,7 @@ public class OAuthTest {
     @InjectMocks
     private OAuth oAuth;
 
+    @Disabled
     @Test
     public void testGetAccessToken() throws IOException, NoSuchFieldException {
         final String token = "fakeToken";

@@ -20,7 +20,6 @@ public class DemoRepo {
 
     /**
      *
-     * @param _emf
      * @return the instance of this repository.
      */
     public static DemoRepo getUserRepo(EntityManagerFactory _emf) {

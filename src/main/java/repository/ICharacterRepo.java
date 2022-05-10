@@ -1,5 +1,6 @@
 package repository;
 
+import dtos.AssetsDTO;
 import dtos.CharacterDTO;
 import utils.types.Mount;
 
@@ -12,5 +13,5 @@ public interface ICharacterRepo {
     CharacterDTO getCharacterInfo(String region, String serverSlug, String name) throws IOException, URISyntaxException;
     Set<Mount> getCharacterMounts(String region, String serverSlug, String name);
     Set<Mount> getCharacterMountsByCharacterId(int id);
-    Media getMediaByCharacterId(int id);
+    AssetsDTO getMediaByCharacterId(int id);
 }
