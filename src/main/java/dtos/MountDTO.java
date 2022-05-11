@@ -9,6 +9,7 @@ public class MountDTO {
     private String name;
     private List<CreatureDisplayDTO> creatureDisplays;
     private String description;
+    private boolean is_useable;
 
     //Why does source have the Datatype Faction/FactionDTO????
     //Changed DataType from FactionDTO to SourceDTO.
@@ -17,21 +18,24 @@ public class MountDTO {
     private FactionDTO faction;
     private RequirementsDTO requirements;
 
+
     public MountDTO(Mount m) {
         if(m.getID() != 0)
             this.id = m.getID();
 
         this.name = m.getName();
 
-        this.creatureDisplays = CreatureDisplayDTO.getDtos(m.getCreatureDisplays());
+        this.is_useable = m.isIs_useable();
+
+       // this.creatureDisplays = CreatureDisplayDTO.getDtos(m.getCreatureDisplays());
 
         this.description = m.getDescription();
 
-        this.source = new SourceDTO(m.getSource());
+        //this.source = new SourceDTO(m.getSource());
 
-        this.faction = new FactionDTO(m.getFaction());
+        //this.faction = new FactionDTO(m.getFaction());
 
-        this.requirements = new RequirementsDTO(m.getRequirements());
+       // this.requirements = new RequirementsDTO(m.getRequirements());
     }
     /*
     public LinksDTO getLinks() { return links; }
@@ -59,4 +63,20 @@ public class MountDTO {
 
     public RequirementsDTO getRequirements() { return requirements; }
     public void setRequirements(RequirementsDTO value) { this.requirements = value; }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isIs_useable() {
+        return is_useable;
+    }
+
+    public void setIs_useable(boolean is_useable) {
+        this.is_useable = is_useable;
+    }
 }

@@ -9,9 +9,13 @@ import dtos.MountDTO;
 import dtos.ResponseBodyDTO;
 import utils.Api;
 import utils.EMF_Creator;
+import utils.types.Assets;
 import utils.types.Mount;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -49,7 +53,7 @@ public class MountRepo implements IMountRepo {
      */
 
     @Override
-    public Set<MountDTO> getAllMounts() {
+    public Set<MountDTO> getAllMounts() throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
         Set<MountDTO> mountSet = new HashSet<>();
@@ -57,64 +61,29 @@ public class MountRepo implements IMountRepo {
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
 
-        try {
             JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
                 Mount mount = gson.fromJson(mounts, Mount.class);
                 mountSet.add(new MountDTO(mount));
             }
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
 
         return mountSet;
     }
 
     @Override
-    public MountDTO getMountByMountId(int id){
+    public MountDTO getMountByMountId(int id) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
         MountDTO mount = null;
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
-        try{
-             mount = api.getDataFromApi("eu", "/data/wow/mount/"+id, map, MountDTO.class);
-        }
 
-        catch (URISyntaxException | IOException e){
-            e.printStackTrace();
-        }
+             mount = api.getDataFromApi("eu", "/data/wow/mount/"+id, map, MountDTO.class);
 
         assert mount != null;
         return mount;
-    }
-
-    @Override
-    public MountDTO getMountByName(String name){
-        Api api = Api.getInstance();
-        Map<String, String> map = new HashMap<>();
-        MountDTO mount = null;
-
-        map.put("namespace", "static-eu");
-        map.put("locale", "en_US");
-        map.put("name.en_US", name);
-
-        try{
-            mount = api.getDataFromApi("eu", "/data/wow/search/mount", map, MountDTO.class);
-        }
-        catch (URISyntaxException | IOException e){
-            e.printStackTrace();
-        }
-
-        return mount;
-    }
-
-    //TODO: Make when database is made :)
-    @Override
-    public MountDTO getMountByItemId(int itemId) {
-        return null;
     }
 
     @Override
@@ -128,23 +97,59 @@ public class MountRepo implements IMountRepo {
     }
 
     @Override
-    public AssetsDTO getItemMediaByItemId(int id) {
-        return null;
+    public Set<AssetsDTO> getItemMediaByItemId(int id) throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        Set<AssetsDTO> assestList = new HashSet<>();
+
+        map.put("namespace", "static-us");
+        map.put("locale", "en_US");
+
+        JsonObject jsonObject = api.getDataFromApi("us", String.format("/data/wow/media/item/%S", id), map, JsonObject.class);
+
+        for(JsonElement assets : jsonObject.getAsJsonArray("assets"))
+        {
+            Assets asset = gson.fromJson(assets, Assets.class);
+
+            if(asset.getKey().equals("icon"))
+            {
+                assestList.add(new AssetsDTO(asset));
+            }
+        }
+
+        return assestList;
     }
+
 
     @Override
-    public AssetsDTO getItemMediaByMountId(int id) {
+    public AssetsDTO getItemMediaByMountId(int id) {    //metode virker men mangler Mount entity!
+        EntityManager em = emf.createEntityManager();
+        /*
+
+        TypedQuery<Assets> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Assets.class);
+        query.setParameter("mountId",id);
+
+        Assets asset = query.getSingleResult();
+        if(asset == null)
+            throw new EntityNotFoundException("the item media with mountId "+id+" was not found");
+
+       return new AssetsDTO(asset);
+       */
+
         return null;
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(entityManagerFactory);
 
-        MountDTO mountDTO = mountRepo.getMountByMountId(6);
+        Set<AssetsDTO> set = mountRepo.getItemMediaByItemId(19019);
 
-        System.out.println(mountDTO.getName());
+        for(AssetsDTO m : set)
+        {
+            System.out.println(m.getValue());
+        }
 
     }
 }

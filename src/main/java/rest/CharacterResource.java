@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.AssetsDTO;
 import dtos.CharacterDTO;
 import dtos.MountDTO;
 import dtos.MountElementDTO;
@@ -16,6 +17,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("character")
 public class CharacterResource
@@ -42,7 +45,7 @@ public class CharacterResource
         try {
             characterDTO = characterRepo.getCharacterInfo(region, slug, charName);
         } catch (IOException | URISyntaxException e) {
-            throw new API_Exception("No Character found", 404, e);
+            throw new API_Exception("Character Not Found", 404, e);
         }
 
         return Response
@@ -54,19 +57,37 @@ public class CharacterResource
     @GET
     @Path("mounts/{region}/{slug}/{charName}")      //get all character mounts
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getCharacterMounts(@PathParam("region") String region,@PathParam("slug") String Slug,@PathParam("charName") String charName) throws EntityNotFoundException{
-        //Not finished, needed some return type refactoring?
-//        Set<MountElementDTO> m = characterRepo.getAllMountsOfCharacter(region, Slug, charName);
-//        return Response.ok().entity(GSON.toJson(m)).build();
+    public Response getCharacterMounts(@PathParam("region") String region,@PathParam("slug") String Slug,@PathParam("charName") String charName) throws API_Exception {
+      Set<MountElementDTO> mountElementSet = new HashSet<>();
+      try {
+          mountElementSet = characterRepo.getCharacterMounts(region, Slug, charName);
+      }
+      catch (IOException | URISyntaxException e) {
+          throw new API_Exception("Character Not Found", 404, e);
+      }
 
-        return null;
+      return Response
+              .ok()
+              .entity(GSON.toJson(mountElementSet))
+              .build();
+
     }
 
     @GET
-    @Path("{region}/{slug}/{charName}/character-media")     //get character media
+    @Path("character-media/{region}/{slug}/{charName}")     //get character media
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getCharacterMedia(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName){
+    public Response getCharacterMedia(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName) throws API_Exception {
+        Set<AssetsDTO> assetList = new HashSet<>();
+               try{
+                   assetList = characterRepo.getCharacterMedia(charName,region,slug);
+               }
+               catch (IOException | URISyntaxException e) {
+                   throw new API_Exception("Character Not Found", 404, e);
+               }
 
-        return null;
+        return Response
+                .ok()
+                .entity(GSON.toJson(assetList))
+                .build();
     }
 }

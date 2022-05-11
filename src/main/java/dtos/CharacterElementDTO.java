@@ -1,11 +1,11 @@
 package dtos;
 
-public class CharacterClassDTO {
+public class CharacterElementDTO {
     private KeyDTO key;
     private String name;
     private int id;
 
-    public CharacterClassDTO(KeyDTO key, String name, int id) {
+    public CharacterElementDTO(KeyDTO key, String name, int id) {
         this.key = key;
         this.name = name;
         this.id = id;

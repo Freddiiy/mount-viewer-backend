@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.AssetsDTO;
 import dtos.MountDTO;
 import entities.User;
 
@@ -40,21 +41,58 @@ public class MountResource {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)       //get all mounts
+    @Path("/")
+    public Response getAllMounts() throws API_Exception {
+        Set<MountDTO> mounts = new HashSet<>();
+        try {
+            mounts = mountRepo.getAllMounts();
+        }
+        catch (IOException | URISyntaxException e) {
+            throw new API_Exception("Character Not Found", 404, e);
+        }
+
+        return Response
+                .ok()
+                .entity(GSON.toJson(mounts))
+                .build();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)       //get mount by id
-    @Path("getById/{id}")
-    public Response getMountById(@PathParam("id") int id) throws EntityNotFoundException {
-        MountDTO m = mountRepo.getMountByMountId(id);
-        return Response.ok().entity(GSON.toJson(m)).build();
+    @Path("/{id}")
+    public Response getMountById(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+        MountDTO mountDTO;
+        try {
+            mountDTO = mountRepo.getMountByMountId(id);
+        }
+        catch (IOException | URISyntaxException e) {
+            throw new API_Exception("Character Not Found", 404, e);
+        }
+
+        return Response
+                .ok()
+                .entity(GSON.toJson(mountDTO))
+                .build();
     }
 
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)        //get mount by name
-   @Path("getByName/{name}")
-   public Response getMountByName(@PathParam("name") String name) throws EntityNotFoundException{
-        MountDTO m = mountRepo.getMountByName(name);
-        return Response.ok().entity(GSON.toJson(m)).build();
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("media/item/{id}")
+    public Response getMountByItemId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+        Set<AssetsDTO> assetList = new HashSet<>();
+        try {
+            assetList = mountRepo.getItemMediaByItemId(id);
+        }
+        catch (IOException |URISyntaxException e){
+            throw new API_Exception("Item Not Found", 404, e);
+        }
+
+        return Response
+                .ok()
+                .entity(GSON.toJson(assetList))
+                .build();
     }
 
     /*

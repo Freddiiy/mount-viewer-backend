@@ -5,6 +5,7 @@ import utils.types.Links;
 
 public class Mount {
     private Links links;
+    private boolean is_useable;
     private long id;
     private String name;
     private List<CreatureDisplay> creatureDisplays;
@@ -36,4 +37,20 @@ public class Mount {
 
     public Requirements getRequirements() { return requirements; }
     public void setRequirements(Requirements value) { this.requirements = value; }
+
+    public boolean isIs_useable() {
+        return is_useable;
+    }
+
+    public void setIs_useable(boolean is_useable) {
+        this.is_useable = is_useable;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
