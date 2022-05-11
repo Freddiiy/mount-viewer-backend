@@ -10,7 +10,9 @@ import dtos.MountDTO;
 import dtos.MountElementDTO;
 import utils.Api;
 import utils.EMF_Creator;
+import utils.types.Assets;
 import utils.types.Mount;
+import utils.types.MountElement;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
@@ -55,11 +57,6 @@ public class CharacterRepo implements ICharacterRepo {
     }
 
     @Override
-    public Set<Mount> getCharacterMounts(String region, String serverSlug, String name) {
-        return null;
-    }
-
-    @Override
     public Set<Mount> getCharacterMountsByCharacterId(int id) {
         return null;
     }
@@ -69,35 +66,57 @@ public class CharacterRepo implements ICharacterRepo {
         return null;
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        CharacterRepo characterRepo = CharacterRepo.getCharacterRepo(EMF_Creator.createEntityManagerFactory());
 
-        CharacterDTO characterDTO = characterRepo.getCharacterInfo("eu", "tarren-mill", "chasie");
-        //Set<MountDTO> m = characterRepo.getAllMountsOfCharacter("eu","tarren-mill","chasie");
-        System.out.println(characterDTO.getId() + " " + characterDTO.getLevel() + " " + characterDTO.getName());
-
-    }
-
-    public Set<MountDTO> getAllMountsOfCharacter(String region, String slug, String charName)
-    {
+    @Override
+    public Set<MountElementDTO> getCharacterMounts(String region, String slug, String charName) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Set<MountDTO> mountSet = new HashSet<>();
+        Set<MountElementDTO> mountSet = new HashSet<>();
 
-        map.put("namespace", "static-"+region);
+        map.put("namespace", "profile-"+region);
         map.put("locale", "en_US");
 
-        try {
             JsonObject jsonObject = api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s/collections/mounts", slug,charName), map, JsonObject.class);
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
-                Mount mount = gson.fromJson(mounts, Mount.class);
-                mountSet.add(new MountDTO(mount));
+                    MountElement mount = gson.fromJson(mounts, MountElement.class);
+                    mountSet.add(new MountElementDTO(mount));
             }
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
 
         return mountSet;
+    }
+
+    public Set<AssetsDTO> getCharacterMedia(String name, String region, String realm) throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        Set<AssetsDTO> assetsSet = new HashSet<>();
+
+        map.put("namespace", "profile-"+region);
+        map.put("locale", "en_US");
+
+             JsonObject jsonObject = api.getDataFromApi(region, String.format("profile/wow/character/%s/%s/character-media", realm, name), map, JsonObject.class);
+
+            for (JsonElement assets : jsonObject.getAsJsonArray("assets")) {
+                Assets asset = gson.fromJson(assets, Assets.class);
+
+                if(asset.getKey().equals("avatar"))
+                {
+                    assetsSet.add(new AssetsDTO(asset));
+                }
+            }
+
+       return assetsSet;
+    }
+
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        CharacterRepo characterRepo = CharacterRepo.getCharacterRepo(EMF_Creator.createEntityManagerFactory());
+
+        Set<AssetsDTO> assetsDTO = characterRepo.getCharacterMedia("chasie","eu","tarren-mill");
+
+        for (AssetsDTO assetsDTO1 : assetsDTO)
+        {
+                System.out.println(assetsDTO1.getValue());
+        }
+
     }
 }

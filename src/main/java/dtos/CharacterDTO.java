@@ -22,10 +22,10 @@ public class CharacterDTO {
         this.mounts = mounts;
     }
 
-    public CharacterDTO(CharacterClassDTO characterClass) {
-        if (characterClass != null) {
-            this.id = characterClass.getId();
-            this.name = characterClass.getName();
+    public CharacterDTO(CharacterElementDTO characterElement) {
+        if (characterElement != null) {
+            this.id = characterElement.getId();
+            this.name = characterElement.getName();
         }
     }
 

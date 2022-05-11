@@ -13,11 +13,9 @@ import java.util.Set;
 public interface IMountRepo {
 
     Set<MountDTO> getAllMounts() throws IOException, URISyntaxException;
-    MountDTO getMountByMountId(int id);
-    MountDTO getMountByName(String name);
-    MountDTO getMountByItemId(int itemId);
+    MountDTO getMountByMountId(int id) throws IOException, URISyntaxException;
     AssetsDTO getCreatureMediaByMountId(int id);
     AssetsDTO getCreatureMediaByCreatureId(int id);
-    AssetsDTO getItemMediaByItemId(int id);
+    Set<AssetsDTO> getItemMediaByItemId(int id) throws IOException, URISyntaxException;
     AssetsDTO getItemMediaByMountId(int id);
 }
