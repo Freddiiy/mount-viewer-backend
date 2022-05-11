@@ -3,9 +3,10 @@
 
 *Projects which are expected to use this start-code are projects that require all, or most of the following technologies:*
  - *JPA and REST*
-- *Testing, including database test*
-- *Testing, including tests of REST-API's*
-- *CI and CONTINUOUS DELIVERY*
+ - *Testing, including database test*
+ - *Testing, including tests of REST-API's*
+ - *CI and CONTINUOUS DELIVERY*
+ - 
 
 ## Flow 2 week 1
 
