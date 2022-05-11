@@ -42,7 +42,6 @@ public class OAuthTest {
     @InjectMocks
     private OAuth oAuth;
 
-    @Disabled
     @Test
     public void testGetAccessToken() throws IOException, NoSuchFieldException {
         final String token = "fakeToken";
@@ -70,7 +69,7 @@ public class OAuthTest {
         Mockito.doReturn(clientSecret).when(envConfig).getClientSecret();
         Mockito.doReturn(encodeFormat).when(apiConfig).getEncoding();
         Mockito.doReturn(new URL("https://www.google.com/")).when(apiConfig).getTokenURL();
-       // Mockito.doReturn(mockTokenResponse).when(gson).fromJson(Mockito.anyString(), Mockito.eq(TokenResponse.class));
+        //Mockito.doReturn(mockTokenResponse).when(gson).fromJson(Mockito.anyString(), Mockito.eq(TokenResponse.class));
 
         FieldSetter fieldSetter = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("urlStreamHandler"));
         fieldSetter.set(urlStreamHandler);
@@ -79,10 +78,11 @@ public class OAuthTest {
         Mockito.doReturn(outputStream).when(mockUrlConnection).getOutputStream();
         Mockito.doReturn(responseCode).when(mockUrlConnection).getResponseCode();
 
-        //ockito.doReturn(token).when(mockTokenResponse).getAccess_token();
+        //Mockito.doReturn(token).when(mockTokenResponse).getAccess_token();
 
         Assertions.assertEquals(token, oAuth.getAccessToken(true));
         Mockito.verify(mockUrlConnection, Mockito.times(1)).setRequestMethod("POST");
+
         Mockito.verify(mockUrlConnection, Mockito.times(1))
                 .setRequestProperty("Authorization",
                         String.format("Basic %s",
@@ -98,7 +98,6 @@ public class OAuthTest {
     public void testCachedToken() throws NoSuchFieldException {
         final String token = "cachedToken";
 
-
         FieldSetter tokenExpiryReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("tokenExpiry"));
         tokenExpiryReflect.set(Instant.now().plus(5, ChronoUnit.MINUTES));
 
@@ -109,7 +108,7 @@ public class OAuthTest {
     }
 
     @Test
-    public void testInvalidTokenValidToken() throws NoSuchFieldException {
+    public void testIsTokenValidToken() throws NoSuchFieldException {
         FieldSetter tokenExpiryReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("tokenExpiry"));
         tokenExpiryReflect.set(Instant.now().plus(5, ChronoUnit.MINUTES));
 
@@ -120,6 +119,35 @@ public class OAuthTest {
     }
 
     @Test
-    public void testInvalidTokenIfNull() {
+    public void testInvalidTokenIfNull() throws NoSuchFieldException {
+        FieldSetter tokenExpiryReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("tokenExpiry"));
+        tokenExpiryReflect.set(null);
+
+        FieldSetter tokenReflect = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("token"));
+        tokenReflect.set(null);
+
+        Assertions.assertTrue(oAuth.isTokenInvalid());
+    }
+
+    @Test
+    public void isTokenInvalidIfExpired() throws NoSuchFieldException {
+        FieldSetter expiredToken = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("tokenExpiry"));
+        expiredToken.set(Instant.EPOCH);
+
+        FieldSetter tokenReflection = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("token"));
+        tokenReflection.set("sampleToken");
+
+        Assertions.assertTrue(oAuth.isTokenInvalid());
+    }
+
+    @Test
+    public void isTokenInvalidNullTokenExpiry() throws NoSuchFieldException {
+        FieldSetter expiredToken = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("tokenExpiry"));
+        expiredToken.set(null);
+
+        FieldSetter tokenReflection = new FieldSetter(oAuth, oAuth.getClass().getDeclaredField("token"));
+        tokenReflection.set("sampleToken");
+
+        Assertions.assertTrue(oAuth.isTokenInvalid());
     }
 }
