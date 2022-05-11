@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.ApiConfig;
 import config.EnvConfig;
+import org.codehaus.classworlds.uberjar.protocol.jar.Handler;
 
 import java.io.IOException;
 import java.net.*;
@@ -12,17 +13,17 @@ import java.util.Base64;
 import java.util.Scanner;
 
 public class OAuth implements IOAuth{
-    private final ApiConfig apiConfig = new ApiConfig();
+    private ApiConfig apiConfig = new ApiConfig();
 
     private String token = null;
     private Instant tokenExpiry = null;
-    private final EnvConfig envConfig = new EnvConfig();
+    private EnvConfig envConfig = new EnvConfig();
     private final Object tokenLock = new Object();
 
     private final Gson gson = new GsonBuilder().create();
 
     //Just for mock-testing the URL connection.
-    private final URLStreamHandler urlStreamHandler = null;
+    private final URLStreamHandler urlStreamHandler = new Handler();
 
 
     @Override
