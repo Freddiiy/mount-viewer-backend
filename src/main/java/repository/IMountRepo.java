@@ -18,4 +18,6 @@ public interface IMountRepo {
     Set<AssetsDTO> getCreatureMediaByCreatureId(int id) throws IOException, URISyntaxException;
     Set<AssetsDTO> getItemMediaByItemId(int id) throws IOException, URISyntaxException;
     Set<AssetsDTO> getItemMediaByMountId(int id) throws IOException, URISyntaxException;
+    MountDTO getSourceByMountId(int id) throws IOException, URISyntaxException;
+    MountDTO getDescriptionByMountId(int id) throws IOException, URISyntaxException;
 }
