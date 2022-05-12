@@ -26,6 +26,9 @@ public class Mount {
         this.itemId = itemId;
     }
 
+    public Mount() {
+    }
+
     public int getMountId() {
         return mountId;
     }
