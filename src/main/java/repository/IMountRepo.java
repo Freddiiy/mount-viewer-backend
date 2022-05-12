@@ -10,11 +10,11 @@ import java.util.Set;
 public interface IMountRepo {
 
     Set<MountDTO> getAllMounts() throws IOException, URISyntaxException;
-    MountDTO getMountByMountId(int id) throws IOException, URISyntaxException;
-    Set<AssetsDTO> getCreatureMediaByMountId(int id) throws IOException, URISyntaxException;
-    Set<AssetsDTO> getCreatureMediaByCreatureId(int id) throws IOException, URISyntaxException;
-    Set<AssetsDTO> getItemMediaByItemId(int id) throws IOException, URISyntaxException;
-    Set<AssetsDTO> getItemMediaByMountId(int id) throws IOException, URISyntaxException;
-    String getSourceByMountId(int id) throws IOException, URISyntaxException;
-    MountDTO getDescriptionByMountId(int id) throws IOException, URISyntaxException;
+    MountDTO getMountByMountId(Long id) throws IOException, URISyntaxException;
+    Set<AssetsDTO> getCreatureMediaByMountId(Long id) throws IOException, URISyntaxException;
+    Set<AssetsDTO> getCreatureMediaByCreatureId(Long id) throws IOException, URISyntaxException;
+    Set<AssetsDTO> getItemMediaByItemId(Long id) throws IOException, URISyntaxException;
+    Set<AssetsDTO> getItemMediaByMountId(Long id) throws IOException, URISyntaxException;
+    String getSourceByMountId(Long id) throws IOException, URISyntaxException;
+    String getDescriptionByMountId(Long id) throws IOException, URISyntaxException;
 }

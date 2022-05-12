@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Mount")
@@ -12,11 +13,11 @@ public class Mount {
 
     //Attributes from table
 
-    private int mountId;
+    private Long mountId;
 
     private String name;
 
-    private int itemId;
+    private Long itemId;
 
     private String description;
 
@@ -27,7 +28,7 @@ public class Mount {
     @Transient
     private boolean is_useable;
 
-    public Mount(int mountId, String name, int itemId, String description, String source, String display) {
+    public Mount(Long mountId, String name, Long itemId, String description, String source, String display) {
         this.mountId = mountId;
         this.name = name;
         this.itemId = itemId;
@@ -37,6 +38,16 @@ public class Mount {
     }
 
     public Mount() {
+    }
+
+    public boolean isFieldsNotNull(){
+        if(this.id == null || this.mountId == null || this.description == null
+        || this.name == null || this.itemId == null || this.source == null || this.display == null){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     public String getDisplay() {
@@ -71,11 +82,11 @@ public class Mount {
         this.is_useable = is_useable;
     }
 
-    public int getMountId() {
+    public Long getMountId() {
         return mountId;
     }
 
-    public void setMountId(int mountId) {
+    public void setMountId(Long mountId) {
         this.mountId = mountId;
     }
 
@@ -87,11 +98,11 @@ public class Mount {
         this.name = name;
     }
 
-    public int getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 
-    public void setItemId(int itemId) {
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
 

@@ -57,7 +57,7 @@ public class MountResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)       //get mount by id
     @Path("{id}")
-    public Response getMountByMountId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+    public Response getMountByMountId(@PathParam("id") Long id) throws EntityNotFoundException, API_Exception {
         MountDTO mountDTO;
         try {
             mountDTO = mountRepo.getMountByMountId(id);
@@ -95,7 +95,7 @@ public class MountResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("media/item/{id}")
-    public Response getItemMediaByMountId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception{
+    public Response getItemMediaByMountId(@PathParam("id") Long id) throws EntityNotFoundException, API_Exception{
         Set<AssetsDTO> assetList = new HashSet<>();
         try{
             assetList = mountRepo.getItemMediaByMountId(id);
@@ -133,7 +133,7 @@ public class MountResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("media/creature/{id}")
-    public Response getCreatureMediaByMountId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+    public Response getCreatureMediaByMountId(@PathParam("id") Long id) throws EntityNotFoundException, API_Exception {
        Set<AssetsDTO> assetList = new HashSet<>();
        try{
            assetList = mountRepo.getCreatureMediaByMountId(id);
