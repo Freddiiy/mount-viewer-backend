@@ -7,11 +7,13 @@ import com.google.gson.JsonObject;
 import dtos.AssetsDTO;
 import dtos.CreatureDisplayDTO;
 import dtos.MountDTO;
+import dtos.SourceDTO;
 import entities.Mount;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
 import utils.types.CreatureDisplay;
+import utils.types.Source;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -188,20 +190,44 @@ public class MountRepo implements IMountRepo {
        return assets;
     }
 
+    //Might need EntityManager Refactoring:))))
+    //Might need some changes
     @Override
-    public MountDTO getSourceByMountId(int id) throws IOException, URISyntaxException {
+    public String getSourceByMountId(int id) throws IOException, URISyntaxException {
         EntityManager em = emf.createEntityManager();
         Mount mount;
-
-        try{
+        try
+        {
             TypedQuery<Mount> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Mount.class);
             query.setParameter("mountId", id);
             mount = query.getSingleResult();
-        } finally {
+        } finally
+        {
             em.close();
         }
+        if(mount.getDescription() == null)
+        {
+            EntityManager em1 = emf.createEntityManager();
+            Api api = Api.getInstance();
+            Map<String, String> map = new HashMap<>();
+            map.put("namespace", "static-us");
+            map.put("locale", "en_US");
+            JsonObject jsonObject = api.getDataFromApi("us", String.format("/data/wow/media/item/%S", id), map, JsonObject.class);
 
-        return null;
+            for(JsonElement sources : jsonObject.getAsJsonArray("source"))
+            {
+                Source source = gson.fromJson(sources, Source.class);
+                SourceDTO sourceDTO = new SourceDTO(source);
+                mount.setSource(sourceDTO.getType());
+                try {
+                    em1.getTransaction();
+                    em1.merge(mount);
+                } finally {
+                    em1.close();
+                }
+            }
+        }
+        return mount.getSource();
     }
 
     @Override
