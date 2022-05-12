@@ -22,18 +22,29 @@ public class Mount {
 
     private String source;
 
+    private String display;
+
     @Transient
     private boolean is_useable;
 
-    public Mount(int mountId, String name, int itemId, String description, String source) {
+    public Mount(int mountId, String name, int itemId, String description, String source, String display) {
         this.mountId = mountId;
         this.name = name;
         this.itemId = itemId;
         this.description = description;
         this.source = source;
+        this.display = display;
     }
 
     public Mount() {
+    }
+
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public String getSource() {
