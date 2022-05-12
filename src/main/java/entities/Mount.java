@@ -6,12 +6,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "mount")
+@Table(name = "Mount")
 public class Mount {
 
     @Id
     @GeneratedValue
     private Long id;
+
+    //Attributes from table
 
     private int mountId;
 
@@ -20,6 +22,11 @@ public class Mount {
     private int itemId;
 
 
+    //Attributes from DTO
+    private String description;
+
+    private boolean is_useable;
+
     public Mount(int mountId, String name, int itemId) {
         this.mountId = mountId;
         this.name = name;
@@ -27,6 +34,22 @@ public class Mount {
     }
 
     public Mount() {
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isIs_useable() {
+        return is_useable;
+    }
+
+    public void setIs_useable(boolean is_useable) {
+        this.is_useable = is_useable;
     }
 
     public int getMountId() {

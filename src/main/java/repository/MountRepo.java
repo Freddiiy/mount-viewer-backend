@@ -6,11 +6,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dtos.AssetsDTO;
 import dtos.MountDTO;
-import dtos.ResponseBodyDTO;
+import entities.Mount;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
-import utils.types.Mount;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,7 +17,10 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class MountRepo implements IMountRepo {
@@ -122,26 +124,32 @@ public class MountRepo implements IMountRepo {
 
 
     @Override
-    public AssetsDTO getItemMediaByMountId(int id) {    //metode virker men mangler Mount entity!
+    public Set<AssetsDTO> getItemMediaByMountId(int id) throws IOException, URISyntaxException {    //metode virker men mangler Mount entity!
         EntityManager em = emf.createEntityManager();
+        Mount mount;
 
+        try {
+            TypedQuery<Mount> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Mount.class);
+            query.setParameter("mountId", id);
+            mount = query.getSingleResult();
+            if(mount == null)
+                throw new EntityNotFoundException("the item media with mountId "+id+" was not found");
 
-        TypedQuery<Assets> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Assets.class);
-        query.setParameter("mountId",id);
+            System.out.println(mount.getItemId());
+        } finally {
+            em.close();
+        }
 
-        Assets asset = query.getSingleResult();
-        if(asset == null)
-            throw new EntityNotFoundException("the item media with mountId "+id+" was not found");
+        Set<AssetsDTO> assets = new HashSet<>();
+        assets = getItemMediaByItemId(mount.getItemId());
 
-       return new AssetsDTO(asset);
+       return assets;
     }
 
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory();
-        MountRepo mountRepo = MountRepo.getMountRepo(entityManagerFactory);
-
-        Set<AssetsDTO> set = mountRepo.getItemMediaByItemId(19019);
+        MountRepo mountRepo = MountRepo.getMountRepo(emf);
+        Set<AssetsDTO> set = mountRepo.getItemMediaByMountId(6);
 
         for(AssetsDTO m : set)
         {

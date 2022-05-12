@@ -1,6 +1,6 @@
 package dtos;
 
-import utils.types.Mount;
+import entities.Mount;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ public class MountDTO {
 
 
     public MountDTO(Mount m) {
-        if(m.getID() != 0)
-            this.id = m.getID();
+        if(m.getId() != 0)
+            this.id = m.getId();
 
         this.name = m.getName();
 

@@ -17,5 +17,5 @@ public interface IMountRepo {
     AssetsDTO getCreatureMediaByMountId(int id);
     AssetsDTO getCreatureMediaByCreatureId(int id);
     Set<AssetsDTO> getItemMediaByItemId(int id) throws IOException, URISyntaxException;
-    AssetsDTO getItemMediaByMountId(int id);
+    Set<AssetsDTO> getItemMediaByMountId(int id) throws IOException, URISyntaxException;
 }
