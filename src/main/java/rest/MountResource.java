@@ -56,8 +56,8 @@ public class MountResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)       //get mount by id
-    @Path("/{id}")
-    public Response getMountById(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+    @Path("{id}")
+    public Response getMountByMountId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
         MountDTO mountDTO;
         try {
             mountDTO = mountRepo.getMountByMountId(id);
@@ -72,10 +72,11 @@ public class MountResource {
                 .build();
     }
 
+    /*      // dont think it need to be an endpoint
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("media/item/{id}")
-    public Response getMountByItemId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+    @Path("media/item/iid/{id}")
+    public Response getItemMediaByItemId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
         Set<AssetsDTO> assetList = new HashSet<>();
         try {
             assetList = mountRepo.getItemMediaByItemId(id);
@@ -89,11 +90,31 @@ public class MountResource {
                 .entity(GSON.toJson(assetList))
                 .build();
     }
+*/
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("media/creature/{id}")
-    public Response getMountMediaByCreatureId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+    @Path("media/item/{id}")
+    public Response getItemMediaByMountId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception{
+        Set<AssetsDTO> assetList = new HashSet<>();
+        try{
+            assetList = mountRepo.getItemMediaByMountId(id);
+        }
+        catch (IOException | URISyntaxException e) {
+            throw new API_Exception("Item Not Found", 404, e);
+        }
+
+        return Response
+                .ok()
+                .entity(GSON.toJson(assetList))
+                .build();
+    }
+
+    /*    // dont think it need to be an endpoint
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("media/creature/cid/{id}")
+    public Response getCreatureMediaByCreatureId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
         Set<AssetsDTO> assetList = new HashSet<>();
         try {
             assetList = mountRepo.getCreatureMediaByCreatureId(id);
@@ -107,14 +128,23 @@ public class MountResource {
                 .entity(GSON.toJson(assetList))
                 .build();
     }
+*/
 
-/*
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/media/")
-    public Response getCreatureMediaByCreatureId(@PathParam("id") int id) throws EntityNotFoundException{
-        Assets href = mountRepo.getCreatureMediaByCreatureId(2);
-        return Response.ok().entity(GSON.toJson(href)).build();
+    @Path("media/creature/{id}")
+    public Response getCreatureMediaByMountId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+       Set<AssetsDTO> assetList = new HashSet<>();
+       try{
+           assetList = mountRepo.getCreatureMediaByMountId(id);
+       }
+       catch (IOException | URISyntaxException e){
+           throw new API_Exception("Creature Not Found", 404, e);
+       }
+
+       return Response
+               .ok()
+               .entity(GSON.toJson(assetList))
+               .build();
     }
-*/
 }
