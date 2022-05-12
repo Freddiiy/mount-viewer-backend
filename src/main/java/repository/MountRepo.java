@@ -124,7 +124,7 @@ public class MountRepo implements IMountRepo {
     @Override
     public AssetsDTO getItemMediaByMountId(int id) {    //metode virker men mangler Mount entity!
         EntityManager em = emf.createEntityManager();
-        /*
+
 
         TypedQuery<Assets> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Assets.class);
         query.setParameter("mountId",id);
@@ -134,9 +134,6 @@ public class MountRepo implements IMountRepo {
             throw new EntityNotFoundException("the item media with mountId "+id+" was not found");
 
        return new AssetsDTO(asset);
-       */
-
-        return null;
     }
 
 
