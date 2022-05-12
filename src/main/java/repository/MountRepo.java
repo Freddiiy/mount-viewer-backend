@@ -188,6 +188,27 @@ public class MountRepo implements IMountRepo {
        return assets;
     }
 
+    @Override
+    public MountDTO getSourceByMountId(int id) throws IOException, URISyntaxException {
+        EntityManager em = emf.createEntityManager();
+        Mount mount;
+
+        try{
+            TypedQuery<Mount> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Mount.class);
+            query.setParameter("mountId", id);
+            mount = query.getSingleResult();
+        } finally {
+            em.close();
+        }
+
+        return null;
+    }
+
+    @Override
+    public MountDTO getDescriptionByMountId(int id) throws IOException, URISyntaxException {
+        return null;
+    }
+
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
