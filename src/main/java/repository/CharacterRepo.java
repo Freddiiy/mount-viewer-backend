@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dtos.AssetsDTO;
 import dtos.CharacterDTO;
-import dtos.MountDTO;
 import dtos.MountElementDTO;
 import utils.Api;
 import utils.EMF_Creator;
@@ -113,10 +112,9 @@ public class CharacterRepo implements ICharacterRepo {
 
         Set<AssetsDTO> assetsDTO = characterRepo.getCharacterMedia("chasie","eu","tarren-mill");
 
-        for (AssetsDTO assetsDTO1 : assetsDTO)
-        {
-                System.out.println(assetsDTO1.getValue());
-        }
+        CharacterDTO characterDTO = characterRepo.getCharacterInfo("eu", "tarren-mill", "chasie");
+
+        System.out.println(characterDTO.getRealm().getSlug());
 
     }
 }
