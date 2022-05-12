@@ -9,6 +9,7 @@ import dtos.CreatureDisplayDTO;
 import dtos.MountDTO;
 import entities.Mount;
 import utils.Api;
+import utils.EMF_Creator;
 import utils.types.Assets;
 import utils.types.CreatureDisplay;
 
@@ -177,8 +178,6 @@ public class MountRepo implements IMountRepo {
             mount = query.getSingleResult();
             if(mount == null)
                 throw new EntityNotFoundException("the item media with mountId "+id+" was not found");
-
-            System.out.println(mount.getItemId());
         } finally {
             em.close();
         }
@@ -191,7 +190,8 @@ public class MountRepo implements IMountRepo {
 
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        MountRepo mountRepo = MountRepo.getMountRepo(emf);
+        EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
+        MountRepo mountRepo = MountRepo.getMountRepo(_emf);
         Set<AssetsDTO> set = mountRepo.getItemMediaByMountId(6);
 
         for(AssetsDTO m : set)

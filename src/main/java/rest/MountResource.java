@@ -4,18 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.AssetsDTO;
 import dtos.MountDTO;
-import entities.User;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.*;
 import javax.ws.rs.Produces;
@@ -113,14 +108,13 @@ public class MountResource {
                 .build();
     }
 
-    /*
+/*
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("getMediaByCreatureId/{id}")
-    public Response getMediaByCreatureId(@PathParam("id") int id) throws EntityNotFoundException{
+    @Path("/media/")
+    public Response getCreatureMediaByCreatureId(@PathParam("id") int id) throws EntityNotFoundException{
         Assets href = mountRepo.getCreatureMediaByCreatureId(2);
         return Response.ok().entity(GSON.toJson(href)).build();
     }
-
-     */
+*/
 }

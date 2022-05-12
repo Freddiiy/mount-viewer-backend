@@ -1,9 +1,6 @@
 package entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Mount")
@@ -23,8 +20,10 @@ public class Mount {
 
 
     //Attributes from DTO
+    @Transient
     private String description;
 
+    @Transient
     private boolean is_useable;
 
     public Mount(int mountId, String name, int itemId) {
