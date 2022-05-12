@@ -74,7 +74,7 @@ public class CharacterResource
     }
 
     @GET
-    @Path("character-media/{region}/{slug}/{charName}")     //get character media
+    @Path("media/{region}/{slug}/{charName}")     //get character media
     @Produces({MediaType.APPLICATION_JSON})
     public Response getCharacterMedia(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName) throws API_Exception {
         Set<AssetsDTO> assetList = new HashSet<>();

@@ -95,6 +95,24 @@ public class MountResource {
                 .build();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("media/creature/{id}")
+    public Response getMountMediaByCreatureId(@PathParam("id") int id) throws EntityNotFoundException, API_Exception {
+        Set<AssetsDTO> assetList = new HashSet<>();
+        try {
+            assetList = mountRepo.getCreatureMediaByCreatureId(id);
+        }
+        catch (IOException | URISyntaxException e) {
+            throw new API_Exception("Creature Not Found", 404, e);
+        }
+
+        return Response
+                .ok()
+                .entity(GSON.toJson(assetList))
+                .build();
+    }
+
     /*
     @GET
     @Produces(MediaType.APPLICATION_JSON)

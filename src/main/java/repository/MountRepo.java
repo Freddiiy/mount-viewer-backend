@@ -5,11 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dtos.AssetsDTO;
+import dtos.CreatureDisplayDTO;
 import dtos.MountDTO;
 import entities.Mount;
 import utils.Api;
-import utils.EMF_Creator;
 import utils.types.Assets;
+import utils.types.CreatureDisplay;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -21,6 +22,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static java.lang.String.format;
 
 
 public class MountRepo implements IMountRepo {
@@ -89,13 +92,53 @@ public class MountRepo implements IMountRepo {
     }
 
     @Override
-    public AssetsDTO getCreatureMediaByMountId(int id) {
-        return null;
+    public Set<AssetsDTO> getCreatureMediaByMountId(int id) throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        Set<CreatureDisplayDTO> creatureList = new HashSet<>();
+        int creatureId = 0;
+
+        map.put("namespace", "static-us");
+        map.put("locale", "en_US");
+
+        JsonObject jsonObject = api.getDataFromApi("us", format("/data/wow/mount/%s", id), map, JsonObject.class);
+
+        for(JsonElement creatures : jsonObject.getAsJsonArray("creature_displays")){
+            CreatureDisplay creature = gson.fromJson(creatures, CreatureDisplay.class);
+
+            creatureList.add(new CreatureDisplayDTO(creature));
+        }
+
+        for(CreatureDisplayDTO creatureDisplayDTO : creatureList)
+        {
+           creatureId = (int) creatureDisplayDTO.getID();
+        }
+
+        return getCreatureMediaByCreatureId(creatureId);
     }
 
     @Override
-    public AssetsDTO getCreatureMediaByCreatureId(int id) {
-        return null;
+    public Set<AssetsDTO> getCreatureMediaByCreatureId(int id) throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        Set<AssetsDTO> assetList = new HashSet<>();
+
+        map.put("namespace", "static-us");
+        map.put("locale", "en_US");
+
+        JsonObject jsonObject = api.getDataFromApi("us", format("/data/wow/media/creature-display/%S",id), map, JsonObject.class);
+
+        for(JsonElement assets : jsonObject.getAsJsonArray("assets"))
+        {
+            Assets asset = gson.fromJson(assets, Assets.class);
+
+            if(asset.getKey().equals("zoom"))
+            {
+                assetList.add(new AssetsDTO(asset));
+            }
+        }
+
+        return assetList;
     }
 
     @Override
