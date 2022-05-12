@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Mount {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     //Attributes from table
@@ -18,21 +18,30 @@ public class Mount {
 
     private int itemId;
 
-
-    //Attributes from DTO
-    @Transient
     private String description;
+
+    private String source;
 
     @Transient
     private boolean is_useable;
 
-    public Mount(int mountId, String name, int itemId) {
+    public Mount(int mountId, String name, int itemId, String description, String source) {
         this.mountId = mountId;
         this.name = name;
         this.itemId = itemId;
+        this.description = description;
+        this.source = source;
     }
 
     public Mount() {
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getDescription() {

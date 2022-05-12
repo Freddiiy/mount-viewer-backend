@@ -6,7 +6,7 @@ import utils.types.MountMount;
 public class MountElementDTO {
     private MountMountDTO mount;
     private boolean isUseable;
-    private Boolean isFavorite;
+    private boolean isFavorite;
 
     public MountElementDTO(MountElement me){
 
