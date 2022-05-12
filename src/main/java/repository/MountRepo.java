@@ -5,11 +5,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dtos.AssetsDTO;
+import dtos.CreatureDisplayDTO;
 import dtos.MountDTO;
 import dtos.ResponseBodyDTO;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
+import utils.types.CreatureDisplay;
 import utils.types.Mount;
 
 import javax.persistence.EntityManager;
@@ -19,6 +21,8 @@ import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
+
+import static java.lang.String.format;
 
 
 public class MountRepo implements IMountRepo {
@@ -87,13 +91,53 @@ public class MountRepo implements IMountRepo {
     }
 
     @Override
-    public AssetsDTO getCreatureMediaByMountId(int id) {
-        return null;
+    public Set<AssetsDTO> getCreatureMediaByMountId(int id) throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        Set<CreatureDisplayDTO> creatureList = new HashSet<>();
+        int creatureId = 0;
+
+        map.put("namespace", "static-us");
+        map.put("locale", "en_US");
+
+        JsonObject jsonObject = api.getDataFromApi("us", format("/data/wow/mount/%s", id), map, JsonObject.class);
+
+        for(JsonElement creatures : jsonObject.getAsJsonArray("creature_displays")){
+            CreatureDisplay creature = gson.fromJson(creatures, CreatureDisplay.class);
+
+            creatureList.add(new CreatureDisplayDTO(creature));
+        }
+
+        for(CreatureDisplayDTO creatureDisplayDTO : creatureList)
+        {
+           creatureId = (int) creatureDisplayDTO.getID();
+        }
+
+        return getCreatureMediaByCreatureId(creatureId);
     }
 
     @Override
-    public AssetsDTO getCreatureMediaByCreatureId(int id) {
-        return null;
+    public Set<AssetsDTO> getCreatureMediaByCreatureId(int id) throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        Set<AssetsDTO> assetList = new HashSet<>();
+
+        map.put("namespace", "static-us");
+        map.put("locale", "en_US");
+
+        JsonObject jsonObject = api.getDataFromApi("us", format("/data/wow/media/creature-display/%S",id), map, JsonObject.class);
+
+        for(JsonElement assets : jsonObject.getAsJsonArray("assets"))
+        {
+            Assets asset = gson.fromJson(assets, Assets.class);
+
+            if(asset.getKey().equals("zoom"))
+            {
+                assetList.add(new AssetsDTO(asset));
+            }
+        }
+
+        return assetList;
     }
 
     @Override
@@ -105,7 +149,7 @@ public class MountRepo implements IMountRepo {
         map.put("namespace", "static-us");
         map.put("locale", "en_US");
 
-        JsonObject jsonObject = api.getDataFromApi("us", String.format("/data/wow/media/item/%S", id), map, JsonObject.class);
+        JsonObject jsonObject = api.getDataFromApi("us", format("/data/wow/media/item/%S", id), map, JsonObject.class);
 
         for(JsonElement assets : jsonObject.getAsJsonArray("assets"))
         {
@@ -144,7 +188,7 @@ public class MountRepo implements IMountRepo {
         EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(entityManagerFactory);
 
-        Set<AssetsDTO> set = mountRepo.getItemMediaByItemId(19019);
+        Set<AssetsDTO> set = mountRepo.getCreatureMediaByMountId(6);
 
         for(AssetsDTO m : set)
         {
