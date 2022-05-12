@@ -54,6 +54,7 @@ public class CharacterResource
                 .build();
     }
 
+    //Returns code 500
     @GET
     @Path("mounts/{region}/{slug}/{charName}")      //get all character mounts
     @Produces({MediaType.APPLICATION_JSON})
