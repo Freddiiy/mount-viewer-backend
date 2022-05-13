@@ -58,10 +58,10 @@ public class MountRepo implements IMountRepo {
      */
 
     @Override
-    public Set<MountElementDTO> getAllMounts() throws IOException, URISyntaxException {
+    public Set<MountDTO> getAllMounts() throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Set<MountElementDTO> mountSet = new HashSet<>();
+        Set<MountDTO> mountSet = new HashSet<>();
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
@@ -69,7 +69,7 @@ public class MountRepo implements IMountRepo {
             JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
-                MountElementDTO mount = gson.fromJson(mounts, MountElementDTO.class);
+                MountDTO mount = gson.fromJson(mounts, MountDTO.class);
                 mountSet.add(mount);
             }
         return mountSet;
@@ -330,12 +330,11 @@ public class MountRepo implements IMountRepo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
-        MountDTO habibi = mountRepo.getMountByMountId(14L);
 
-        Set<MountElementDTO> mountDTOSet = mountRepo.getAllMounts();
+        Set<MountDTO> mountElementDTOS = mountRepo.getAllMounts();
 
-        for (MountElementDTO mountElementDTO : mountDTOSet ) {
-            System.out.println(mountElementDTO.getMount().getName());
+        for (MountDTO mountDTO : mountElementDTOS) {
+            System.out.println(mountDTO.getName());
         }
 
 

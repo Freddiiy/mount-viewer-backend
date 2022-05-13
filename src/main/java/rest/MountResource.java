@@ -42,7 +42,7 @@ public class MountResource {
     @Produces(MediaType.APPLICATION_JSON)       //get all mounts
     @Path("/")
     public Response getAllMounts() throws API_Exception {
-        Set<MountElementDTO> mounts = new HashSet<>();
+        Set<MountDTO> mounts = new HashSet<>();
         try {
             mounts = mountRepo.getAllMounts();
         }
