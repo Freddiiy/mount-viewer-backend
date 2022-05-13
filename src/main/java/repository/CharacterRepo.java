@@ -111,12 +111,5 @@ public class CharacterRepo implements ICharacterRepo {
         CharacterRepo characterRepo = CharacterRepo.getCharacterRepo(EMF_Creator.createEntityManagerFactory());
 
        // Set<AssetsDTO> assetsDTO = characterRepo.getCharacterMedia("chasie","eu","tarren-mill");
-
-        Set<MountElementDTO> mountElementDTOS = characterRepo.getCharacterMounts("eu","tarren-mill","chasie");
-
-        for (MountElementDTO assetsDTO1 : mountElementDTOS)
-        {
-            System.out.println(assetsDTO1.getName());
-        }
     }
 }

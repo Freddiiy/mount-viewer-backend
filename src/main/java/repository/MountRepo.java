@@ -69,8 +69,8 @@ public class MountRepo implements IMountRepo {
             JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
-                Mount mount = gson.fromJson(mounts, Mount.class);
-                mountSet.add(new MountElementDTO(mount));
+                MountElementDTO mount = gson.fromJson(mounts, MountElementDTO.class);
+                mountSet.add(mount);
             }
         return mountSet;
     }
@@ -334,11 +334,9 @@ public class MountRepo implements IMountRepo {
 
         Set<MountElementDTO> mountDTOSet = mountRepo.getAllMounts();
 
-        for(MountElementDTO m : mountDTOSet)
-        {
-            System.out.println(m.getName());
+        for (MountElementDTO mountElementDTO : mountDTOSet ) {
+            System.out.println(mountElementDTO.getMount().getName());
         }
-
 
 
     }
