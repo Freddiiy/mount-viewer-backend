@@ -11,6 +11,7 @@ public class CharacterDTO {
     private FactionDTO faction;
     private RaceDTO race;
     private List<MountElementDTO> mounts;
+    private List<AssetsDTO> media;
 
     public CharacterDTO(int id, String name, int level, GenderDTO gender, FactionDTO faction, RaceDTO race, List<MountElementDTO> mounts) {
         this.id = id;

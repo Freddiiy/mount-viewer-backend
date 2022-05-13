@@ -3,9 +3,8 @@ package repository;
 import dtos.AssetsDTO;
 import dtos.CharacterDTO;
 import dtos.MountElementDTO;
-import utils.types.Mount;
+import entities.Mount;
 
-import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Set;

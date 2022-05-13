@@ -16,6 +16,8 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+
+import dtos.MountElementDTO;
 import errorhandling.API_Exception;
 import repository.MountRepo;
 import utils.EMF_Creator;
@@ -40,7 +42,7 @@ public class MountResource {
     @Produces(MediaType.APPLICATION_JSON)       //get all mounts
     @Path("/")
     public Response getAllMounts() throws API_Exception {
-        Set<MountDTO> mounts = new HashSet<>();
+        Set<MountElementDTO> mounts = new HashSet<>();
         try {
             mounts = mountRepo.getAllMounts();
         }

@@ -4,16 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dtos.AssetsDTO;
-import dtos.CreatureDisplayDTO;
-import dtos.MountDTO;
-import dtos.SourceDTO;
+import dtos.*;
 import entities.Mount;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
 import utils.types.CreatureDisplay;
-import utils.types.MountElement;
 import utils.types.Source;
 
 import javax.persistence.EntityManager;
@@ -62,10 +58,10 @@ public class MountRepo implements IMountRepo {
      */
 
     @Override
-    public Set<MountDTO> getAllMounts() throws IOException, URISyntaxException {
+    public Set<MountElementDTO> getAllMounts() throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Set<MountDTO> mountSet = new HashSet<>();
+        Set<MountElementDTO> mountSet = new HashSet<>();
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
@@ -74,9 +70,8 @@ public class MountRepo implements IMountRepo {
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
                 Mount mount = gson.fromJson(mounts, Mount.class);
-                mountSet.add(new MountDTO(mount));
+                mountSet.add(new MountElementDTO(mount));
             }
-
         return mountSet;
     }
 
@@ -337,12 +332,18 @@ public class MountRepo implements IMountRepo {
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
         MountDTO habibi = mountRepo.getMountByMountId(14L);
 
-        System.out.println(habibi.getName());
+        Set<MountElementDTO> mountDTOSet = mountRepo.getAllMounts();
+
+        for(MountElementDTO m : mountDTOSet)
+        {
+            System.out.println(m.getName());
+        }
 
 
 
     }
 }
+
 
 
 

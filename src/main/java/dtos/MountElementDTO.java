@@ -1,26 +1,36 @@
 package dtos;
 
+import entities.Mount;
 import utils.types.MountElement;
-import utils.types.MountMount;
 
 public class MountElementDTO {
-    private MountMountDTO mount;
-    private boolean isUseable;
-    private boolean isFavorite;
+    private String name;
+    private long id;
 
-    public MountElementDTO(MountElement me){
+    public MountElementDTO(Mount m){
+        this.name  = m.getName();
 
-        this.mount = new MountMountDTO(me.getMount());
-        this.isUseable = me.getIsUseable();
-        this.isFavorite = me.getIsFavorite();
+        this.id = m.getMountId();
     }
 
-    public MountMountDTO getMount() { return mount; }
-    public void setMount(MountMountDTO value) { this.mount = value; }
+    public MountElementDTO(MountElement mountElement) {
+        this.name = mountElement.getMount().getName();
+        this.id = mountElement.getMount().getID();
+    }
 
-    public boolean getIsUseable() { return isUseable; }
-    public void setIsUseable(boolean value) { this.isUseable = value; }
+    public String getName() {
+        return name;
+    }
 
-    public Boolean getIsFavorite() { return isFavorite; }
-    public void setIsFavorite(Boolean value) { this.isFavorite = value; }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
