@@ -4,21 +4,21 @@ import entities.Mount;
 import utils.types.MountElement;
 
 public class MountElementDTO {
-    private MountDTO mount;
+    private BasicMountDTO mount;
     private boolean isUseable;
     private boolean isFavorite;
 
-    public MountElementDTO(MountDTO mount, boolean isUseable, boolean isFavorite) {
+    public MountElementDTO(BasicMountDTO mount, boolean isUseable, boolean isFavorite) {
         this.mount = mount;
         this.isUseable = isUseable;
         this.isFavorite = isFavorite;
     }
 
-    public MountDTO getMount() {
+    public BasicMountDTO getMount() {
         return mount;
     }
 
-    public void setMount(MountDTO mount) {
+    public void setMount(BasicMountDTO mount) {
         this.mount = mount;
     }
 
@@ -38,3 +38,4 @@ public class MountElementDTO {
         isFavorite = favorite;
     }
 }
+

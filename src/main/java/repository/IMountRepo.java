@@ -1,6 +1,7 @@
 package repository;
 
 import dtos.AssetsDTO;
+import dtos.BasicMountDTO;
 import dtos.MountDTO;
 import dtos.MountElementDTO;
 
@@ -10,7 +11,7 @@ import java.util.Set;
 
 public interface IMountRepo {
 
-    Set<MountDTO> getAllMounts() throws IOException, URISyntaxException;
+    Set<BasicMountDTO> getAllMounts() throws IOException, URISyntaxException;
     MountDTO getMountByMountId(Long id) throws IOException, URISyntaxException;
     Set<AssetsDTO> getCreatureMediaByMountId(Long id) throws IOException, URISyntaxException;
     Set<AssetsDTO> getCreatureMediaByCreatureId(Long id) throws IOException, URISyntaxException;

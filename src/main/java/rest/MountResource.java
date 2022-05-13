@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.AssetsDTO;
+import dtos.BasicMountDTO;
 import dtos.MountDTO;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class MountResource {
     @Produces(MediaType.APPLICATION_JSON)       //get all mounts
     @Path("/")
     public Response getAllMounts() throws API_Exception {
-        Set<MountDTO> mounts = new HashSet<>();
+        Set<BasicMountDTO> mounts = new HashSet<>();
         try {
             mounts = mountRepo.getAllMounts();
         }
