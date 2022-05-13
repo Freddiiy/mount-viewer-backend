@@ -104,7 +104,7 @@ public class MountRepo implements IMountRepo {
             mount.setDisplay(savedAsset);
             mergeMountData(mount);
 
-            return new MountDTO(mount);
+            return new MountDTO(getMountFromDb(id));
         }
         else{
             //If the mount does exist and doesn't have null values in it's row.
