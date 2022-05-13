@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
         resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
         resources.add(rest.CharacterResource.class);
         resources.add(rest.MountResource.class);
+        resources.add(rest.RealmResource.class);
     }
     
 }
