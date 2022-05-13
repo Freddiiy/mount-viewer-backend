@@ -7,7 +7,7 @@ import java.util.List;
 public class MountDTO {
     private long id;
     private String name;
-    private List<CreatureDisplayDTO> creatureDisplays;
+    private List<String> creatureDisplays;
     private String description;
     private boolean is_useable;
 
@@ -49,8 +49,8 @@ public class MountDTO {
     public String getName() { return name; }
     public void setName(String value) { this.name = value; }
 
-    public List<CreatureDisplayDTO> getCreatureDisplays() { return creatureDisplays; }
-    public void setCreatureDisplays(List<CreatureDisplayDTO> value) { this.creatureDisplays = value; }
+    public List<String> getCreatureDisplays() { return creatureDisplays; }
+    public void setCreatureDisplays(List<String> value) { this.creatureDisplays = value; }
 
     public String getDescription() { return description; }
     public void setDescription(String value) { this.description = value; }

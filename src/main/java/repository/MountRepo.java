@@ -100,9 +100,10 @@ public class MountRepo implements IMountRepo {
             for(AssetsDTO a : assetsDTOS){
                 savedAsset = a.getValue();
             }
-            mount = new Mount(mountDTO);
             mount.setDisplay(savedAsset);
+            mount = new Mount(mountDTO);
             mergeMountData(mount);
+            mountDTO.getCreatureDisplays().add(savedAsset);
             return mountDTO;
         }
         else{
