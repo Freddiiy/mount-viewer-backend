@@ -18,10 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -58,10 +55,10 @@ public class MountRepo implements IMountRepo {
      */
 
     @Override
-    public Set<BasicMountDTO> getAllMounts() throws IOException, URISyntaxException {
+    public List<BasicMountDTO> getAllMounts() throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Set<BasicMountDTO> mountSet = new HashSet<>();
+        List<BasicMountDTO> mountList = new ArrayList<>();
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
@@ -70,9 +67,9 @@ public class MountRepo implements IMountRepo {
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
                 BasicMountDTO mount = gson.fromJson(mounts, BasicMountDTO.class);
-                mountSet.add(mount);
+                mountList.add(mount);
             }
-        return mountSet;
+        return mountList;
     }
 
     @Override

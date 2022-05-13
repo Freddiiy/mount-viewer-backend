@@ -9,6 +9,7 @@ import dtos.MountDTO;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
@@ -43,7 +44,7 @@ public class MountResource {
     @Produces(MediaType.APPLICATION_JSON)       //get all mounts
     @Path("/")
     public Response getAllMounts() throws API_Exception {
-        Set<BasicMountDTO> mounts = new HashSet<>();
+        List<BasicMountDTO> mounts;
         try {
             mounts = mountRepo.getAllMounts();
         }
