@@ -4,11 +4,22 @@ import utils.types.Source;
 
 //Delete if Source is unnecessary
 public class SourceDTO {
+    private String type;
     private String name;
-    private String description;
 
     public SourceDTO(Source s){
+        this.type = s.getType();
         this.name = s.getName();
-        this.description = s.getDescription();
+    }
+
+    public SourceDTO() {
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
     }
 }

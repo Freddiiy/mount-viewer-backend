@@ -5,13 +5,13 @@ package utils.types;
 public class Source {
     private String name;
 
-    private String description;
+    private String type;
 
     public String getName() {
         return name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getType() {
+        return type;
     }
 }
