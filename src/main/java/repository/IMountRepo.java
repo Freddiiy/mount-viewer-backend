@@ -12,7 +12,7 @@ import java.util.Set;
 
 public interface IMountRepo {
 
-    List<BasicMountDTO> getAllMounts() throws IOException, URISyntaxException;
+    List<MountDTO> getAllMounts() throws IOException, URISyntaxException;
     MountDTO getMountByMountId(Long id) throws IOException, URISyntaxException;
     Set<AssetsDTO> getCreatureMediaByMountId(Long id) throws IOException, URISyntaxException;
     Set<AssetsDTO> getCreatureMediaByCreatureId(Long id) throws IOException, URISyntaxException;

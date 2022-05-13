@@ -55,10 +55,10 @@ public class MountRepo implements IMountRepo {
      */
 
     @Override
-    public List<BasicMountDTO> getAllMounts() throws IOException, URISyntaxException {
+    public List<MountDTO> getAllMounts() throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        List<BasicMountDTO> mountList = new ArrayList<>();
+        List<MountDTO> mountList = new ArrayList<>();
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
@@ -67,7 +67,7 @@ public class MountRepo implements IMountRepo {
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
                 BasicMountDTO mount = gson.fromJson(mounts, BasicMountDTO.class);
-                mountList.add(mount);
+                mountList.add(getMountByMountId(mount.getId()));
             }
         return mountList;
     }
