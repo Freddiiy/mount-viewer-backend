@@ -11,7 +11,7 @@ import dtos.MountElementDTO;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
-import utils.types.Mount;
+import entities.Mount;
 import utils.types.MountElement;
 
 import javax.persistence.EntityManagerFactory;
@@ -52,8 +52,8 @@ public class CharacterRepo implements ICharacterRepo {
 
         map.put("namespace", "profile-"+region);
         map.put("locale", "en_US");
-
-        return api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
+        CharacterDTO characterDTO =  api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
+       return null;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class CharacterRepo implements ICharacterRepo {
         map.put("locale", "en_US");
 
             JsonObject jsonObject = api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s/collections/mounts", slug,charName), map, JsonObject.class);
-
+        System.out.println(jsonObject);
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
                     MountElementDTO mountElementDTO = gson.fromJson(mounts, MountElementDTO.class);
                     mountSet.add(mountElementDTO);
@@ -110,9 +110,13 @@ public class CharacterRepo implements ICharacterRepo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         CharacterRepo characterRepo = CharacterRepo.getCharacterRepo(EMF_Creator.createEntityManagerFactory());
 
-        Set<MountElementDTO> mountElementDTOS = characterRepo.getCharacterMounts("eu", "tarren-mill", "chasie");
-        for (MountElementDTO mountElementDTO : mountElementDTOS) {
-            System.out.println(mountElementDTO.getMount().getName());
+       // Set<AssetsDTO> assetsDTO = characterRepo.getCharacterMedia("chasie","eu","tarren-mill");
+
+        Set<MountElementDTO> mountElementDTOS = characterRepo.getCharacterMounts("eu","tarren-mill","chasie");
+
+        for (MountElementDTO assetsDTO1 : mountElementDTOS)
+        {
+            System.out.println(assetsDTO1.getName());
         }
     }
 }

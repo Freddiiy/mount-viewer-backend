@@ -1,7 +1,7 @@
 package dtos;
 
+import entities.Mount;
 import utils.types.MountElement;
-import utils.types.MountMount;
 
 public class MountElementDTO {
     private MountDTO mount;
