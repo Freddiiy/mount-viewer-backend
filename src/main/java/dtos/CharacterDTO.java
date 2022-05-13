@@ -11,7 +11,6 @@ public class CharacterDTO {
     private FactionDTO faction;
     private RaceDTO race;
     private List<MountElementDTO> mounts;
-    private List<AssetsDTO> media;
     private RealmDTO realm;
 
 

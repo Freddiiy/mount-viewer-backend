@@ -52,8 +52,7 @@ public class CharacterRepo implements ICharacterRepo {
 
         map.put("namespace", "profile-"+region);
         map.put("locale", "en_US");
-        CharacterDTO characterDTO =  api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
-       return null;
+        return api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
     }
 
     @Override
@@ -109,6 +108,10 @@ public class CharacterRepo implements ICharacterRepo {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         CharacterRepo characterRepo = CharacterRepo.getCharacterRepo(EMF_Creator.createEntityManagerFactory());
+
+        CharacterDTO characterDTO = characterRepo.getCharacterInfo("eu", "tarren-mill", "chasie");
+
+        System.out.println(characterDTO.getName());
 
        // Set<AssetsDTO> assetsDTO = characterRepo.getCharacterMedia("chasie","eu","tarren-mill");
     }
