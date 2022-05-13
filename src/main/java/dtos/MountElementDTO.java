@@ -4,23 +4,37 @@ import utils.types.MountElement;
 import utils.types.MountMount;
 
 public class MountElementDTO {
-    private MountMountDTO mount;
+    private MountDTO mount;
     private boolean isUseable;
     private boolean isFavorite;
 
-    public MountElementDTO(MountElement me){
-
-        this.mount = new MountMountDTO(me.getMount());
-        this.isUseable = me.getIsUseable();
-        this.isFavorite = me.getIsFavorite();
+    public MountElementDTO(MountDTO mount, boolean isUseable, boolean isFavorite) {
+        this.mount = mount;
+        this.isUseable = isUseable;
+        this.isFavorite = isFavorite;
     }
 
-    public MountMountDTO getMount() { return mount; }
-    public void setMount(MountMountDTO value) { this.mount = value; }
+    public MountDTO getMount() {
+        return mount;
+    }
 
-    public boolean getIsUseable() { return isUseable; }
-    public void setIsUseable(boolean value) { this.isUseable = value; }
+    public void setMount(MountDTO mount) {
+        this.mount = mount;
+    }
 
-    public Boolean getIsFavorite() { return isFavorite; }
-    public void setIsFavorite(Boolean value) { this.isFavorite = value; }
+    public boolean isUseable() {
+        return isUseable;
+    }
+
+    public void setUseable(boolean useable) {
+        isUseable = useable;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 }

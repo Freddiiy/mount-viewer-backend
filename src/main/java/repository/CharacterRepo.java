@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dtos.AssetsDTO;
 import dtos.CharacterDTO;
+import dtos.MountDTO;
 import dtos.MountElementDTO;
 import utils.Api;
 import utils.EMF_Creator;
@@ -78,10 +79,9 @@ public class CharacterRepo implements ICharacterRepo {
             JsonObject jsonObject = api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s/collections/mounts", slug,charName), map, JsonObject.class);
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
-                    MountElement mount = gson.fromJson(mounts, MountElement.class);
-                    mountSet.add(new MountElementDTO(mount));
+                    MountElementDTO mountElementDTO = gson.fromJson(mounts, MountElementDTO.class);
+                    mountSet.add(mountElementDTO);
             }
-
         return mountSet;
     }
 
@@ -110,11 +110,9 @@ public class CharacterRepo implements ICharacterRepo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         CharacterRepo characterRepo = CharacterRepo.getCharacterRepo(EMF_Creator.createEntityManagerFactory());
 
-        Set<AssetsDTO> assetsDTO = characterRepo.getCharacterMedia("chasie","eu","tarren-mill");
-
-        CharacterDTO characterDTO = characterRepo.getCharacterInfo("eu", "tarren-mill", "chasie");
-
-        System.out.println(characterDTO.getRealm().getSlug());
-
+        Set<MountElementDTO> mountElementDTOS = characterRepo.getCharacterMounts("eu", "tarren-mill", "chasie");
+        for (MountElementDTO mountElementDTO : mountElementDTOS) {
+            System.out.println(mountElementDTO.getMount().getName());
+        }
     }
 }

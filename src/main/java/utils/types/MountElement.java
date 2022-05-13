@@ -1,16 +1,33 @@
 package utils.types;
 
+import dtos.MountDTO;
+
 public class MountElement {
-    private MountMount mount;
+    private MountDTO mount;
     private boolean isUseable;
     private Boolean isFavorite;
 
-    public MountMount getMount() { return mount; }
-    public void setMount(MountMount value) { this.mount = value; }
+    public MountDTO getMount() {
+        return mount;
+    }
 
-    public boolean getIsUseable() { return isUseable; }
-    public void setIsUseable(boolean value) { this.isUseable = value; }
+    public void setMount(MountDTO mount) {
+        this.mount = mount;
+    }
 
-    public Boolean getIsFavorite() { return isFavorite; }
-    public void setIsFavorite(Boolean value) { this.isFavorite = value; }
+    public boolean isUseable() {
+        return isUseable;
+    }
+
+    public void setUseable(boolean useable) {
+        isUseable = useable;
+    }
+
+    public Boolean getFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        isFavorite = favorite;
+    }
 }
