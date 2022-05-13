@@ -327,14 +327,6 @@ public class MountRepo implements IMountRepo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
-
-        Set<BasicMountDTO> mountElementDTOS = mountRepo.getAllMounts();
-
-        for (BasicMountDTO mountDTO : mountElementDTOS) {
-            System.out.println(mountDTO.getName());
-        }
-
-
     }
 }
 
