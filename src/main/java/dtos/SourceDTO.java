@@ -7,9 +7,9 @@ public class SourceDTO {
     private String type;
     private String name;
 
-    public SourceDTO(Source s){
-        this.type = s.getType();
-        this.name = s.getName();
+    public SourceDTO(String type, String name){
+        this.type = type;
+        this.name = name;
     }
 
     public SourceDTO() {

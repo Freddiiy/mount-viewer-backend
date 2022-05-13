@@ -1,8 +1,11 @@
 package dtos;
 
 import entities.Mount;
+import utils.types.Source;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class MountDTO {
     private long id;
@@ -27,11 +30,11 @@ public class MountDTO {
 
         this.is_useable = m.isIs_useable();
 
-       // this.creatureDisplays = CreatureDisplayDTO.getDtos(m.getCreatureDisplays());
+        this.creatureDisplays = List.of(m.getDisplay());
 
         this.description = m.getDescription();
 
-        //this.source = new SourceDTO(m.getSource());
+        this.source = new SourceDTO(m.getSource().toUpperCase(),m.getSource());
 
         //this.faction = new FactionDTO(m.getFaction());
 

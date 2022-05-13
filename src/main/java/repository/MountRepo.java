@@ -100,19 +100,17 @@ public class MountRepo implements IMountRepo {
             for(AssetsDTO a : assetsDTOS){
                 savedAsset = a.getValue();
             }
-            mount.setDisplay(savedAsset);
             mount = new Mount(mountDTO);
+            mount.setDisplay(savedAsset);
             mergeMountData(mount);
-            mountDTO.getCreatureDisplays().add(savedAsset);
-            return mountDTO;
+
+            return new MountDTO(mount);
         }
         else{
             //If the mount does exist and doesn't have null values in it's row.
             mount = getMountFromDb(id);
-            System.out.println("Eksisterer");
+            return new MountDTO(mount);
         }
-        assert mountDTO != null;
-        return new MountDTO(mount);
     }
 
     @Override
@@ -238,7 +236,7 @@ public class MountRepo implements IMountRepo {
             for(JsonElement sources : jsonObject.getAsJsonArray("source"))
             {
                 Source source = gson.fromJson(sources, Source.class);
-                SourceDTO sourceDTO = new SourceDTO(source);
+                SourceDTO sourceDTO = new SourceDTO(source.getType(),source.getName());
                 mount.setSource(sourceDTO.getType());
                 try {
                     em1.getTransaction();
@@ -337,7 +335,7 @@ public class MountRepo implements IMountRepo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
-        MountDTO habibi = mountRepo.getMountByMountId(12L);
+        MountDTO habibi = mountRepo.getMountByMountId(14L);
 
         System.out.println(habibi.getName());
 
