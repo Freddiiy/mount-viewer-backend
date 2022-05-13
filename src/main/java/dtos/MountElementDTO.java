@@ -4,33 +4,37 @@ import entities.Mount;
 import utils.types.MountElement;
 
 public class MountElementDTO {
-    private String name;
-    private long id;
+    private MountDTO mount;
+    private boolean isUseable;
+    private boolean isFavorite;
 
-    public MountElementDTO(Mount m){
-        this.name  = m.getName();
-
-        this.id = m.getMountId();
+    public MountElementDTO(MountDTO mount, boolean isUseable, boolean isFavorite) {
+        this.mount = mount;
+        this.isUseable = isUseable;
+        this.isFavorite = isFavorite;
     }
 
-    public MountElementDTO(MountElement mountElement) {
-        this.name = mountElement.getMount().getName();
-        this.id = mountElement.getMount().getID();
+    public MountDTO getMount() {
+        return mount;
     }
 
-    public String getName() {
-        return name;
+    public void setMount(MountDTO mount) {
+        this.mount = mount;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public boolean isUseable() {
+        return isUseable;
     }
 
-    public long getId() {
-        return id;
+    public void setUseable(boolean useable) {
+        isUseable = useable;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

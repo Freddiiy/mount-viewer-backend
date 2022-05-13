@@ -79,10 +79,9 @@ public class CharacterRepo implements ICharacterRepo {
             JsonObject jsonObject = api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s/collections/mounts", slug,charName), map, JsonObject.class);
         System.out.println(jsonObject);
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
-                    MountElement mount = gson.fromJson(mounts, MountElement.class);
-                    mountSet.add(new MountElementDTO(mount));
+                    MountElementDTO mountElementDTO = gson.fromJson(mounts, MountElementDTO.class);
+                    mountSet.add(mountElementDTO);
             }
-
         return mountSet;
     }
 
@@ -119,6 +118,5 @@ public class CharacterRepo implements ICharacterRepo {
         {
             System.out.println(assetsDTO1.getName());
         }
-
     }
 }
