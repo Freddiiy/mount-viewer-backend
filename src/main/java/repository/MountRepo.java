@@ -13,6 +13,7 @@ import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
 import utils.types.CreatureDisplay;
+import utils.types.MountElement;
 import utils.types.Source;
 
 import javax.persistence.EntityManager;
@@ -83,6 +84,7 @@ public class MountRepo implements IMountRepo {
     public MountDTO getMountByMountId(Long id) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
+        MountDTO mountDTO = null;
         Mount mount = null;
 
         if(!mountExist(id)) {
@@ -90,8 +92,7 @@ public class MountRepo implements IMountRepo {
             map.put("namespace", "static-eu");
             map.put("locale", "en_US");
 
-            mount = api.getDataFromApi("eu", "/data/wow/mount/"+id, map, Mount.class);
-
+            mountDTO = api.getDataFromApi("eu", "/data/wow/mount/"+id, map, MountDTO.class);
 
             //Lorte kode skal fikses
             String savedAsset = "";
@@ -99,17 +100,17 @@ public class MountRepo implements IMountRepo {
             for(AssetsDTO a : assetsDTOS){
                 savedAsset = a.getValue();
             }
+            mount = new Mount(mountDTO);
             mount.setDisplay(savedAsset);
             mergeMountData(mount);
-            System.out.println(mount.getDisplay());
-            System.out.println("Eksisterer ikke");
+            return mountDTO;
         }
         else{
             //If the mount does exist and doesn't have null values in it's row.
             mount = getMountFromDb(id);
             System.out.println("Eksisterer");
         }
-        assert mount != null;
+        assert mountDTO != null;
         return new MountDTO(mount);
     }
 
@@ -305,10 +306,15 @@ public class MountRepo implements IMountRepo {
 
     public void mergeMountData(Mount mount){
         EntityManager em = emf.createEntityManager();
-
         try{
-            em.getTransaction();
-            em.merge(mount);
+            em.getTransaction().begin();
+            TypedQuery<Mount> query = em.createQuery("UPDATE Mount m SET m.description = :description, m.source = :source, m.display = :display WHERE m.mountId = :mountId", Mount.class);
+            query.setParameter("description", mount.getDescription());
+            query.setParameter("source", mount.getSource());
+            query.setParameter("display", mount.getDisplay());
+            query.setParameter("mountId", mount.getMountId());
+            query.executeUpdate();
+            em.getTransaction().commit();
         } finally {
             em.close();
         }
@@ -330,7 +336,9 @@ public class MountRepo implements IMountRepo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
-        MountDTO habibi = mountRepo.getMountByMountId(7L);
+        MountDTO habibi = mountRepo.getMountByMountId(12L);
+
+        System.out.println(habibi.getName());
 
 
 

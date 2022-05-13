@@ -1,5 +1,8 @@
 package entities;
 
+import dtos.CreatureDisplayDTO;
+import dtos.MountDTO;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -37,8 +40,17 @@ public class Mount {
         this.display = display;
     }
 
+    public Mount(MountDTO mountDTO){
+        this.mountId = mountDTO.getID();
+        this.description = mountDTO.getDescription();
+        this.source = mountDTO.getSource().getName();
+        this.name = mountDTO.getName();
+    }
+
     public Mount() {
     }
+
+
 
     public boolean isFieldsNotNull(){
         if(this.id == null || this.mountId == null || this.description == null
