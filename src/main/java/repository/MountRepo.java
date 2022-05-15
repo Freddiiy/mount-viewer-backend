@@ -12,10 +12,7 @@ import utils.types.Assets;
 import utils.types.CreatureDisplay;
 import utils.types.Source;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -66,8 +63,9 @@ public class MountRepo implements IMountRepo {
             JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
 
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
-                BasicMountDTO mount = gson.fromJson(mounts, BasicMountDTO.class);
-                mountList.add(getMountByMountId(mount.getId()));
+                BasicMountDTO basicMount = gson.fromJson(mounts, BasicMountDTO.class);
+                MountDTO mountDTO = getMountByMountId(basicMount.getId());
+                mountList.add(mountDTO);
             }
         return mountList;
     }
@@ -76,8 +74,8 @@ public class MountRepo implements IMountRepo {
     public MountDTO getMountByMountId(Long id) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        MountDTO mountDTO = null;
-        Mount mount = null;
+        MountDTO mountDTO;
+        Mount mount;
 
         if(!mountExist(id)) {
             //If the mount doesn't exist or have null values in it's row.
@@ -94,9 +92,9 @@ public class MountRepo implements IMountRepo {
             }
             mount = new Mount(mountDTO);
             mount.setDisplay(savedAsset);
-            mergeMountData(mount);
+            insertMount(mount);
 
-            return new MountDTO(getMountFromDb(id));
+            return mountDTO;
         }
         else{
             //If the mount does exist and doesn't have null values in it's row.
@@ -275,24 +273,34 @@ public class MountRepo implements IMountRepo {
                 }
             }
         }
-        else
         return mount.getDescription();
-
-        return null;
     }
 
     public Mount getMountFromDb(Long mountId){
         EntityManager em = emf.createEntityManager();
-        Mount mount;
+        Mount mount = null;
 
         try{
             TypedQuery<Mount> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Mount.class);
             query.setParameter("mountId", mountId);
             mount = query.getSingleResult();
+        } catch (NoResultException ignored) {
+
         } finally {
             em.close();
         }
         return mount;
+    }
+
+    public void insertMount(Mount mount) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(mount);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
     }
 
     public void mergeMountData(Mount mount){
@@ -315,10 +323,10 @@ public class MountRepo implements IMountRepo {
         EntityManager em = emf.createEntityManager();
 
         try{
-            TypedQuery<Mount> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Mount.class);
+            TypedQuery<Long> query = em.createQuery("select count(m) from Mount m where m.mountId = :mountId", Long.class);
             query.setParameter("mountId", mountId);
-            Mount mount = query.getSingleResult();
-            return mount.isFieldsNotNull();
+
+            return query.getSingleResult() > 0;
         } finally {
             em.close();
         }
@@ -327,6 +335,14 @@ public class MountRepo implements IMountRepo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
+
+        MountDTO mountDTOtest = mountRepo.getMountByMountId(6L);
+
+        List<MountDTO> mountDTOS = mountRepo.getAllMounts();
+
+        for (MountDTO instance : mountDTOS) {
+            System.out.println(instance.getName());
+        }
     }
 }
 

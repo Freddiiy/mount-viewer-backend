@@ -1,8 +1,10 @@
 package dtos;
 
 import entities.Mount;
+import errorhandling.NotFoundException;
 import utils.types.Source;
 
+import javax.persistence.Basic;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -23,18 +25,21 @@ public class MountDTO {
 
 
     public MountDTO(Mount m) {
-        if(m.getId() != 0)
-            this.id = m.getId();
+        if(m != null && m.getId() != null) {
+            this.id = m.getMountId();
+            this.name = m.getName();
+            this.is_useable = m.isIs_useable();
+            this.creatureDisplays = List.of(m.getDisplay());
+            this.description = m.getDescription();
 
-        this.name = m.getName();
-
-        this.is_useable = m.isIs_useable();
-
-        this.creatureDisplays = List.of(m.getDisplay());
-
-        this.description = m.getDescription();
-
-        this.source = new SourceDTO(m.getSource().toUpperCase(),m.getSource());
+            if (m.getSource() == null) {
+                this.source = null;
+            } else {
+                this.source = new SourceDTO(m.getSource().toUpperCase(), m.getSource());
+            }
+        } else {
+            throw new NullPointerException("Mount is null");
+        }
 
         //this.faction = new FactionDTO(m.getFaction());
 

@@ -2,6 +2,7 @@ package entities;
 
 import dtos.CreatureDisplayDTO;
 import dtos.MountDTO;
+import dtos.SourceDTO;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,13 +16,13 @@ public class Mount {
     private Long id;
 
     //Attributes from table
-
     private Long mountId;
 
     private String name;
 
     private Long itemId;
 
+    @Column(length = 8000)
     private String description;
 
     private String source;
@@ -43,7 +44,12 @@ public class Mount {
     public Mount(MountDTO mountDTO){
         this.mountId = mountDTO.getID();
         this.description = mountDTO.getDescription();
-        this.source = mountDTO.getSource().getName();
+
+        if (mountDTO.getSource() == null) {
+            this.source = new SourceDTO("NO_SOURCE_AVAILABLE", "No source available").getType();
+        } else {
+            this.source = mountDTO.getSource().getName();
+        }
         this.name = mountDTO.getName();
     }
 

@@ -49,7 +49,6 @@ public class Api implements IApi {
         }
 
         URL url = requestBuilder.build().uri().toURL();
-        System.out.println(url);
         String response = HttpUtils.fetchData(url.toString());
 
         return gson.fromJson(response, theClass);
