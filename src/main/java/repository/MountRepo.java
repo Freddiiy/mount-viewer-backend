@@ -64,6 +64,9 @@ public class MountRepo implements IMountRepo {
         JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
 
         mountList = getAllMountsFromDb();
+        for (ExtendedMountDTO extendedMountDTO : mountList) {
+            System.out.println(extendedMountDTO.getName());
+        }
 
         /*
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
@@ -337,10 +340,14 @@ public class MountRepo implements IMountRepo {
         EntityManager em = emf.createEntityManager();
         String returnValue;
         try {
-            TypedQuery<String> query = em.createQuery("SELECT m.iconDisplay FROM MountItemID m WHERE m.mountId = :mountId", String.class);
+            TypedQuery<String> query = em.createQuery("SELECT m.iconDisplay FROM MountItemID m WHERE m.itemId is not null and m.mountId = :mountId", String.class);
             query.setParameter("mountId", id);
             returnValue = query.getSingleResult();
-        } finally {
+        } catch(NoResultException e){
+            returnValue = "";
+            return returnValue;
+        }
+            finally {
             em.close();
         }
 
@@ -353,10 +360,14 @@ public class MountRepo implements IMountRepo {
         Long returnValue;
 
         try{
-            TypedQuery<Long> query = em.createQuery("SELECT m.itemId FROM MountItemID m WHERE m.mountId = :mountId", Long.class);
+            TypedQuery<Long> query = em.createQuery("SELECT m.itemId FROM MountItemID m WHERE m.itemId is not null and m.mountId = :mountId", Long.class);
             query.setParameter("mountId", id);
             returnValue = query.getSingleResult();
-        } finally {
+        } catch(NoResultException e) {
+            returnValue = 0L;
+            return returnValue;
+        }
+        finally {
             em.close();
         }
         return returnValue;
@@ -441,6 +452,7 @@ public class MountRepo implements IMountRepo {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
 
+        mountRepo.getAllMounts();
         //This line fills MountItemID table with iconDisplay values
         //mountRepo.fillItemDisplay();
 

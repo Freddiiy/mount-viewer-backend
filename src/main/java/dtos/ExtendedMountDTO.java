@@ -11,8 +11,12 @@ public class ExtendedMountDTO extends MountDTO {
 
     public ExtendedMountDTO(Mount m, Long itemId, String iconDisplay) {
         super(m);
-        this.itemId = itemId;
-        this.iconDisplay = iconDisplay;
+        if (itemId != null && iconDisplay != null) {
+            this.itemId = itemId;
+            this.iconDisplay = iconDisplay;
+        } else {
+            throw new NullPointerException("Item ID is null");
+        }
     }
 
     public ExtendedMountDTO(Long mountId, String name, String description, String source, String display, Long itemId, String iconDisplay) {
