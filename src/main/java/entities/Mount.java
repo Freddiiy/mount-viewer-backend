@@ -20,8 +20,6 @@ public class Mount {
 
     private String name;
 
-    private Long itemId;
-
     @Column(length = 8000)
     private String description;
 
@@ -32,10 +30,9 @@ public class Mount {
     @Transient
     private boolean is_useable;
 
-    public Mount(Long mountId, String name, Long itemId, String description, String source, String display) {
+    public Mount(Long mountId, String name, String description, String source, String display) {
         this.mountId = mountId;
         this.name = name;
-        this.itemId = itemId;
         this.description = description;
         this.source = source;
         this.display = display;
@@ -59,13 +56,8 @@ public class Mount {
 
 
     public boolean isFieldsNotNull(){
-        if(this.id == null || this.mountId == null || this.description == null
-        || this.name == null || this.itemId == null || this.source == null || this.display == null){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return this.id != null && this.mountId != null && this.description != null
+                && this.name != null && this.source != null && this.display != null;
     }
 
     public String getDisplay() {
@@ -114,14 +106,6 @@ public class Mount {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
     }
 
     public void setId(Long id) {
