@@ -194,7 +194,9 @@ public class MountRepo implements IMountRepo {
         }
 
         Set<AssetsDTO> assets = new HashSet<>();
-        assets = getItemMediaByItemId(mount.getItemId());
+
+        //TODO: ITem id made
+        //assets = getItemMediaByItemId(mount.getItemId());
 
        return assets;
     }
