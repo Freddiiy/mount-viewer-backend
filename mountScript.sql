@@ -1,11 +1,11 @@
-CREATE TABLE IF NOT EXISTS `Mounts` (
+CREATE TABLE IF NOT EXISTS `MountsItemid` (
 `id` INT(11) NOT NULL AUTO_INCREMENT,
 `mountId` INT(11) NOT NULL,
 `name` VARCHAR(255) NOT NULL,
 `itemId` INT(11) NULL,
 PRIMARY KEY(`id`,`mountId`,`name`, 'itemId'));
 
-INSERT INTO Mounts (`mountId`,`name,`itemId') VALUES
+INSERT INTO MountsItemid (`mountId`,`name,`itemId') VALUES
 (6,'Brown Horse',5656),
 (7,'Gray Wolf',NULL),
 (8,'White Stallion',12353),
