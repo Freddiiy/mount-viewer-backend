@@ -64,9 +64,6 @@ public class MountRepo implements IMountRepo {
         JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
 
         mountList = getAllMountsFromDb();
-        for (ExtendedMountDTO extendedMountDTO : mountList) {
-            System.out.println(extendedMountDTO.getName());
-        }
 
         /*
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
@@ -383,6 +380,9 @@ public class MountRepo implements IMountRepo {
 
             List<ExtendedMountDTO> mountDTOList = new ArrayList<>();
             for (Mount m : mountList) {
+                if(getItemId_ByMountId(m.getMountId()) == 0) continue;
+                if(getIconDisplay_ByMountId(m.getMountId()).equals("")) continue;
+
                 ExtendedMountDTO extendedMountDTO = new ExtendedMountDTO(m, getItemId_ByMountId(m.getMountId()), getIconDisplay_ByMountId(m.getMountId()));
                 mountDTOList.add(extendedMountDTO);
             }
@@ -391,6 +391,15 @@ public class MountRepo implements IMountRepo {
             em.close();
         }
     }
+
+//    public void deleteDuplicates() {
+//        List<ExtendedMountDTO> extendedMountDTOS = getAllMountsFromDb();
+//        for (int i = 0; i <= extendedMountDTOS.size(); i++) {
+//            if(extendedMountDTOS.get(i).getItemId() == extendedMountDTOS.get(i+1).getItemId()){
+//                extendedMountDTOS.remove
+//            }
+//        }
+//    }
 
     public Mount getMountFromDb(Long mountId){
         EntityManager em = emf.createEntityManager();
@@ -418,6 +427,7 @@ public class MountRepo implements IMountRepo {
             em.close();
         }
     }
+
 
     public void mergeMountData(Mount mount){
         EntityManager em = emf.createEntityManager();
