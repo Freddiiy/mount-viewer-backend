@@ -46,7 +46,7 @@ public class Mount {
         this.description = mountDTO.getDescription();
 
         if (mountDTO.getSource() == null) {
-            this.source = new SourceDTO("NO_SOURCE_AVAILABLE", "No source available").getType();
+            this.source = new SourceDTO("NO SOURCE AVAILABLE", "No source available").getType();
         } else {
             this.source = mountDTO.getSource().getName();
         }

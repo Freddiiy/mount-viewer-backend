@@ -4,7 +4,7 @@ import utils.types.Source;
 
 //Delete if Source is unnecessary
 public class SourceDTO {
-    public class SourceDTONotAvailable {
+    public static class SourceDTONotAvailable {
         public static final String TYPE = "SOUCE_NOT_AVAILABLE";
         public static final String NAME = "Source not available";
     }

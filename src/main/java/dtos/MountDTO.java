@@ -30,13 +30,8 @@ public class MountDTO {
             this.name = m.getName();
             this.is_useable = m.isIs_useable();
             this.creatureDisplays = List.of(m.getDisplay());
-            this.description = m.getDescription();
-
-            if (m.getSource() == null) {
-                this.source = null;
-            } else {
-                this.source = new SourceDTO(m.getSource().toUpperCase(), m.getSource());
-            }
+            this.description = descriptionPatch(m.getDescription());
+            this.source = sourcePatch(new SourceDTO(m.getSource().toUpperCase(), m.getName()));
         } else {
             throw new NullPointerException("Mount is null");
         }
@@ -86,5 +81,21 @@ public class MountDTO {
 
     public void setIs_useable(boolean is_useable) {
         this.is_useable = is_useable;
+    }
+
+    private String descriptionPatch(String description) {
+        if (description == null) {
+            return "No description available";
+        } else {
+            return description;
+        }
+    }
+
+    private SourceDTO sourcePatch(SourceDTO source) {
+        if (source == null) {
+            return new SourceDTO(SourceDTO.SourceDTONotAvailable.TYPE, SourceDTO.SourceDTONotAvailable.NAME);
+        } else {
+            return new SourceDTO(source.getType(), source.getName());
+        }
     }
 }
