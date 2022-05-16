@@ -48,7 +48,7 @@ public class CharacterRepo implements ICharacterRepo {
         map.put("locale", "en_US");
         CharacterDTO characterDTO = api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
 
-        ExtendedCharacterDTO extendedCharacterDTO = new ExtendedCharacterDTO(characterDTO, getCharacterMedia(region, realmSlug, characterName));
+        ExtendedCharacterDTO extendedCharacterDTO = new ExtendedCharacterDTO(characterDTO, region, getCharacterMedia(region, realmSlug, characterName));
 
         System.out.println(extendedCharacterDTO.getAssets());
         return extendedCharacterDTO;
