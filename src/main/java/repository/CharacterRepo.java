@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dtos.AssetsDTO;
-import dtos.CharacterDTO;
-import dtos.MountDTO;
-import dtos.MountElementDTO;
+import dtos.*;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
@@ -17,10 +14,7 @@ import utils.types.MountElement;
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CharacterRepo implements ICharacterRepo {
     private static EntityManagerFactory emf;
@@ -46,13 +40,18 @@ public class CharacterRepo implements ICharacterRepo {
     }
 
     @Override
-    public CharacterDTO getCharacterInfo(String region, String realmSlug, String characterName) throws IOException, URISyntaxException {
+    public ExtendedCharacterDTO getCharacterInfo(String region, String realmSlug, String characterName) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
 
         map.put("namespace", "profile-"+region);
         map.put("locale", "en_US");
-        return api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
+        CharacterDTO characterDTO = api.getDataFromApi(region, String.format("/profile/wow/character/%s/%s", realmSlug, characterName), map, CharacterDTO.class);
+
+        ExtendedCharacterDTO extendedCharacterDTO = new ExtendedCharacterDTO(characterDTO, getCharacterMedia(region, realmSlug, characterName));
+
+        System.out.println(extendedCharacterDTO.getAssets());
+        return extendedCharacterDTO;
     }
 
     @Override
@@ -84,15 +83,15 @@ public class CharacterRepo implements ICharacterRepo {
         return mountSet;
     }
 
-    public Set<AssetsDTO> getCharacterMedia(String name, String region, String realm) throws IOException, URISyntaxException {
+    public List<AssetsDTO> getCharacterMedia(String region, String realmSlug, String name) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Set<AssetsDTO> assetsSet = new HashSet<>();
+        List<AssetsDTO> assetsSet = new ArrayList<>();
 
         map.put("namespace", "profile-"+region);
         map.put("locale", "en_US");
 
-             JsonObject jsonObject = api.getDataFromApi(region, String.format("profile/wow/character/%s/%s/character-media", realm, name), map, JsonObject.class);
+             JsonObject jsonObject = api.getDataFromApi(region, String.format("profile/wow/character/%s/%s/character-media", realmSlug, name), map, JsonObject.class);
 
             for (JsonElement assets : jsonObject.getAsJsonArray("assets")) {
                 Assets asset = gson.fromJson(assets, Assets.class);

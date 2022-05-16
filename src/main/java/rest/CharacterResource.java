@@ -2,12 +2,11 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dtos.AssetsDTO;
-import dtos.CharacterDTO;
-import dtos.MountDTO;
-import dtos.MountElementDTO;
+import dtos.*;
 import errorhandling.API_Exception;
 import javax.ws.rs.*;
+
+import errorhandling.ExceptionDTO;
 import repository.CharacterRepo;
 import utils.EMF_Creator;
 
@@ -18,6 +17,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Path("character")
@@ -41,7 +41,7 @@ public class CharacterResource
     @Path("{region}/{slug}/{charName}")     //get character information
     @Produces({MediaType.APPLICATION_JSON})
     public Response getCharacter(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName) throws API_Exception {
-        CharacterDTO characterDTO;
+        ExtendedCharacterDTO characterDTO;
         try {
             characterDTO = characterRepo.getCharacterInfo(region, slug, charName);
         } catch (IOException | URISyntaxException e) {
@@ -78,7 +78,7 @@ public class CharacterResource
     @Path("media/{region}/{slug}/{charName}")     //get character media
     @Produces({MediaType.APPLICATION_JSON})
     public Response getCharacterMedia(@PathParam("region") String region, @PathParam("slug") String slug, @PathParam("charName") String charName) throws API_Exception {
-        Set<AssetsDTO> assetList = new HashSet<>();
+        List<AssetsDTO> assetList;
                try{
                    assetList = characterRepo.getCharacterMedia(charName,region,slug);
                }
