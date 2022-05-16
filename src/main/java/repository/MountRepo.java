@@ -60,13 +60,18 @@ public class MountRepo implements IMountRepo {
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
 
-            JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
+        JsonObject jsonObject = api.getDataFromApi("eu", "/data/wow/mount/index", map, JsonObject.class);
 
+        mountList = getAllMountsFromDb();
+
+        /*
             for (JsonElement mounts : jsonObject.getAsJsonArray("mounts")) {
                 BasicMountDTO basicMount = gson.fromJson(mounts, BasicMountDTO.class);
                 MountDTO mountDTO = getMountByMountId(basicMount.getId());
                 mountList.add(mountDTO);
             }
+
+         */
         return mountList;
     }
 
@@ -241,6 +246,7 @@ public class MountRepo implements IMountRepo {
         return mount.getSource();
     }
 
+
     @Override
     public String getDescriptionByMountId(Long id) throws IOException, URISyntaxException {
         EntityManager em = emf.createEntityManager();
@@ -276,6 +282,24 @@ public class MountRepo implements IMountRepo {
             }
         }
         return mount.getDescription();
+    }
+
+    public List<MountDTO> getAllMountsFromDb() {
+        EntityManager em = emf.createEntityManager();
+
+        List<Mount> mountList;
+        try {
+            TypedQuery<Mount> query = em.createQuery("select m from Mount m", Mount.class);
+            mountList = query.getResultList();
+
+            List<MountDTO> mountDTOList = new ArrayList<>();
+            for (Mount m : mountList) {
+                mountDTOList.add(new MountDTO(m));
+            }
+            return mountDTOList;
+        } finally {
+            em.close();
+        }
     }
 
     public Mount getMountFromDb(Long mountId){
