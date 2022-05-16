@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dtos.*;
 import entities.Mount;
+import entities.MountItemID;
 import utils.Api;
 import utils.EMF_Creator;
 import utils.types.Assets;
@@ -52,10 +53,10 @@ public class MountRepo implements IMountRepo {
      */
 
     @Override
-    public List<MountDTO> getAllMounts() throws IOException, URISyntaxException {
+    public List<ExtendedMountDTO> getAllMounts() throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        List<MountDTO> mountList = new ArrayList<>();
+        List<ExtendedMountDTO> mountList = new ArrayList<>();
 
         map.put("namespace", "static-eu");
         map.put("locale", "en_US");
@@ -76,7 +77,7 @@ public class MountRepo implements IMountRepo {
     }
 
     @Override
-    public MountDTO getMountByMountId(Long id) throws IOException, URISyntaxException {
+    public ExtendedMountDTO getMountByMountId(Long id) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
         MountDTO mountDTO;
@@ -99,12 +100,12 @@ public class MountRepo implements IMountRepo {
             mount.setDisplay(savedAsset);
             insertMount(mount);
 
-            return mountDTO;
+            return new ExtendedMountDTO(mount, getItemId_ByMountId(mount.getMountId()), getIconDisplay_ByMountId(mount.getMountId()));
         }
         else{
             //If the mount does exist and doesn't have null values in it's row.
             mount = getMountFromDb(id);
-            return new MountDTO(mount);
+            return new ExtendedMountDTO(mount, getItemId_ByMountId(mount.getMountId()), getIconDisplay_ByMountId(mount.getMountId()));
         }
     }
 
@@ -162,7 +163,7 @@ public class MountRepo implements IMountRepo {
     public Set<AssetsDTO> getItemMediaByItemId(Long id) throws IOException, URISyntaxException {
         Api api = Api.getInstance();
         Map<String, String> map = new HashMap<>();
-        Set<AssetsDTO> assestList = new HashSet<>();
+        Set<AssetsDTO> assetList = new HashSet<>();
 
         map.put("namespace", "static-us");
         map.put("locale", "en_US");
@@ -175,21 +176,70 @@ public class MountRepo implements IMountRepo {
 
             if(asset.getKey().equals("icon"))
             {
-                assestList.add(new AssetsDTO(asset));
+                assetList.add(new AssetsDTO(asset));
             }
         }
 
-        return assestList;
+        return assetList;
     }
 
+    @Override
+    public void fillItemDisplay() throws IOException, URISyntaxException {
+        Api api = Api.getInstance();
+        Map<String, String> map = new HashMap<>();
+        List<AssetsDTO> assetList = new ArrayList<>();
+
+        map.put("namespace", "static-us");
+        map.put("locale", "en_US");
+
+        EntityManager em = emf.createEntityManager();
+        EntityManager em1 = emf.createEntityManager();
+
+        try {
+            //Get list of mountItemIDs
+            TypedQuery<MountItemID> query = em.createQuery("SELECT m FROM MountItemID m WHERE m.itemId is not null", MountItemID.class);
+            List<MountItemID> mountItemIDS = query.getResultList();
+            //Iter List of ItemIDs
+            for (int i = 0; i < mountItemIDS.size() ; i++)
+            {
+                //Fetch individual itemIcon
+                JsonObject jsonObject = api.getDataFromApi("us", String.format("/data/wow/media/item/%S", mountItemIDS.get(i).getItemId()), map, JsonObject.class);
+                for(JsonElement assets : jsonObject.getAsJsonArray("assets"))
+                {
+                    Assets asset = gson.fromJson(assets, Assets.class);
+
+                    if(asset.getKey().equals("icon"))
+                    {
+                        assetList.add(new AssetsDTO(asset));
+                    }
+                }
+                System.out.println(assetList.get(i).getValue());
+                try{
+                    em1.getTransaction().begin();
+                    TypedQuery<MountItemID> updateQuery = em1.createQuery("UPDATE MountItemID m SET m.iconDisplay = :asset WHERE m.itemId = :itemId", MountItemID.class);
+                    updateQuery.setParameter("asset", assetList.get(i).getValue());
+                    updateQuery.setParameter("itemId", mountItemIDS.get(i).getItemId());
+                    int rowsUpdated = updateQuery.executeUpdate();
+                    System.out.println("Entities updated: "+ rowsUpdated);
+                    em1.getTransaction().commit();
+                } catch (IndexOutOfBoundsException exception){
+                System.out.println("ass");
+                }
+            }
+        } finally {
+            em.close();
+            em1.close();
+        }
+
+    }
 
     @Override
     public Set<AssetsDTO> getItemMediaByMountId(Long id) throws IOException, URISyntaxException {    //metode virker men mangler Mount entity!
         EntityManager em = emf.createEntityManager();
-        Mount mount;
+        MountItemID mount;
 
         try {
-            TypedQuery<Mount> query = em.createQuery("SELECT m FROM Mount m WHERE m.mountId = :mountId", Mount.class);
+            TypedQuery<MountItemID> query = em.createQuery("SELECT m FROM MountItemID m WHERE m.mountId = :mountId", MountItemID.class);
             query.setParameter("mountId", id);
             mount = query.getSingleResult();
             if(mount == null)
@@ -199,9 +249,7 @@ public class MountRepo implements IMountRepo {
         }
 
         Set<AssetsDTO> assets = new HashSet<>();
-
-        //TODO: ITem id made
-        //assets = getItemMediaByItemId(mount.getItemId());
+        assets = getItemMediaByItemId(mount.getItemId());
 
        return assets;
     }
@@ -284,7 +332,37 @@ public class MountRepo implements IMountRepo {
         return mount.getDescription();
     }
 
-    public List<MountDTO> getAllMountsFromDb() {
+    //Slave Method that is used for another method
+    public String getIconDisplay_ByMountId(Long id){
+        EntityManager em = emf.createEntityManager();
+        String returnValue;
+        try {
+            TypedQuery<String> query = em.createQuery("SELECT m.iconDisplay FROM MountItemID m WHERE m.mountId = :mountId", String.class);
+            query.setParameter("mountId", id);
+            returnValue = query.getSingleResult();
+        } finally {
+            em.close();
+        }
+
+        return returnValue;
+    }
+
+    //Slave Method that is used for another method
+    public Long getItemId_ByMountId(Long id){
+        EntityManager em = emf.createEntityManager();
+        Long returnValue;
+
+        try{
+            TypedQuery<Long> query = em.createQuery("SELECT m.itemId FROM MountItemID m WHERE m.mountId = :mountId", Long.class);
+            query.setParameter("mountId", id);
+            returnValue = query.getSingleResult();
+        } finally {
+            em.close();
+        }
+        return returnValue;
+    }
+
+    public List<ExtendedMountDTO> getAllMountsFromDb() {
         EntityManager em = emf.createEntityManager();
 
         List<Mount> mountList;
@@ -292,9 +370,10 @@ public class MountRepo implements IMountRepo {
             TypedQuery<Mount> query = em.createQuery("select m from Mount m", Mount.class);
             mountList = query.getResultList();
 
-            List<MountDTO> mountDTOList = new ArrayList<>();
+            List<ExtendedMountDTO> mountDTOList = new ArrayList<>();
             for (Mount m : mountList) {
-                mountDTOList.add(new MountDTO(m));
+                ExtendedMountDTO extendedMountDTO = new ExtendedMountDTO(m, getItemId_ByMountId(m.getMountId()), getIconDisplay_ByMountId(m.getMountId()));
+                mountDTOList.add(extendedMountDTO);
             }
             return mountDTOList;
         } finally {
@@ -362,13 +441,9 @@ public class MountRepo implements IMountRepo {
         EntityManagerFactory _emf   = EMF_Creator.createEntityManagerFactory();
         MountRepo mountRepo = MountRepo.getMountRepo(_emf);
 
-        MountDTO mountDTOtest = mountRepo.getMountByMountId(6L);
+        //This line fills MountItemID table with iconDisplay values
+        //mountRepo.fillItemDisplay();
 
-        List<MountDTO> mountDTOS = mountRepo.getAllMounts();
-
-        for (MountDTO instance : mountDTOS) {
-            System.out.println(instance.getName());
-        }
     }
 }
 

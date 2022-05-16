@@ -15,7 +15,6 @@ public class Mount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Attributes from table
     private Long mountId;
 
     private String name;

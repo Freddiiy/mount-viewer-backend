@@ -2,9 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dtos.AssetsDTO;
-import dtos.BasicMountDTO;
-import dtos.MountDTO;
+import dtos.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,7 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import dtos.MountElementDTO;
 import errorhandling.API_Exception;
 import repository.MountRepo;
 import utils.EMF_Creator;
@@ -44,7 +41,7 @@ public class MountResource {
     @Produces(MediaType.APPLICATION_JSON)       //get all mounts
     @Path("/")
     public Response getAllMounts() throws API_Exception {
-        List<MountDTO> mounts;
+        List<ExtendedMountDTO> mounts;
         try {
             mounts = mountRepo.getAllMounts();
         }
@@ -62,7 +59,7 @@ public class MountResource {
     @Produces(MediaType.APPLICATION_JSON)       //get mount by id
     @Path("{id}")
     public Response getMountByMountId(@PathParam("id") Long id) throws EntityNotFoundException, API_Exception {
-        MountDTO mountDTO;
+        ExtendedMountDTO mountDTO;
         try {
             mountDTO = mountRepo.getMountByMountId(id);
         }
